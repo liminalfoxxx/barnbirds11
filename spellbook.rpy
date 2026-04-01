@@ -9,8 +9,8 @@ default animal_speak_prog = Spell("Animal_Speak", {"Catnip": 1, "Bone": 1, "Cand
 # DELETE (Destruction) – uses the Destruction Scroll
 default delete_prog = Spell("Delete", {"Destruction_Scroll": 1}, "Deletes obstacles in your way. 'WARNING: HIGHLY UNSTABLE CODE.'")
 
-# HEAL_BLIGHT – heals infected living targets (Penguin, Ptarmigan)
-default heal_blight_prog = Spell("Heal_Blight", {"Holy Water": 1, "Cherries": 1}, "Cleanses a living system of the Blight. Can only be cast on the infected.")
+# HEAL_BLIGHT – heals infected living targets (Seagull, Secretary, Ptarmigan)
+default heal_blight_prog = Spell("Heal_Blight", {"Placeholder_A": 1, "Placeholder_B": 1, "Placeholder_C": 1}, "Cleanses a living system of the Blight. Can only be cast on the infected.")
 
 # HACK – previously Power_Surge, opens special device dialogues
 # Requires the item names exactly as in your item_db: "Orange Soda" and "Cassette".
@@ -41,7 +41,7 @@ init python:
         # --- GHOST SPEAK LOGIC ---
         if program_id == "GHOST_SPEAK":
             # Valid spectral targets
-            valid_targets = {"SPECTRE_DEALER", "SCARLET_SPECTRE", "LOST_SOUL", "CASSOWARY", "ROOSTER", "GHOST_CAT"}
+            valid_targets = {"SCARLET_TANAGER", "FALCON", "SHRIKE", "LOST_SOUL", "CASSOWARY", "ROOSTER", "GHOST_CAT"}
             if target_id in valid_targets:
                 # If the ghost hasn't been "decrypted" to can_talk, pay the recipe and enable
                 if not target.can_talk:
@@ -97,10 +97,18 @@ init python:
         # --- HEAL_BLIGHT LOGIC ---
         elif program_id == "HEAL_BLIGHT":
             # One-time cures with simple flags
-            if target_id == "PENGUIN" and not getattr(store, "penguin_healed", False):
+            if target_id == "SEAGULL" and not getattr(store, "seagull_healed", False):
                 if inv.execute_program(program):
-                    setattr(store, "penguin_healed", True)
-                    renpy.jump("heal_penguin")
+                    setattr(store, "seagull_healed", True)
+                    renpy.jump("heal_seagull")
+                else:
+                    renpy.notify("ERROR: INSUFFICIENT_COMPONENTS")
+                    renpy.jump("overworld_loop")
+
+            elif target_id == "SECRETARY" and not getattr(store, "secretary_healed", False):
+                if inv.execute_program(program):
+                    setattr(store, "secretary_healed", True)
+                    renpy.jump("heal_secretary")
                 else:
                     renpy.notify("ERROR: INSUFFICIENT_COMPONENTS")
                     renpy.jump("overworld_loop")

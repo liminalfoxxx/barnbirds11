@@ -22,7 +22,8 @@ default completion_swan = False
 default pigeon_route_unlocked = False
 
 # Centralize one-time spell/activation flags to avoid duplicate defaults
-default penguin_healed = False
+default seagull_healed = False
+default secretary_healed = False
 default ptarmigan_healed = False
 default turkey_activated = False
 default cabin_roots_deleted = False
@@ -85,8 +86,7 @@ label start_normal:
         inventory.learn_spell(ghost_speak)
         inventory.learn_spell(animal_speak)
         inventory.learn_spell(hack_prog)
-        # Add starter items if desired:
-        # inventory.add_item(item_db["belladonna"])
+        inventory.learn_spell(heal_blight_prog)
     
     $ journal_entries = []
     $ journal_entries.append(JournalEntry("ROOT", "System Online", "2026-01-15", "OS stabilized. Cleric credentials verified. Blight investigation beginning in Sector 01."))
@@ -132,6 +132,7 @@ label start_debug:
         inventory.learn_spell(ghost_speak)
         inventory.learn_spell(animal_speak)
         inventory.learn_spell(hack_prog)
+        inventory.learn_spell(heal_blight_prog)
         
         # Add all items
         for item_key in item_db:
@@ -158,6 +159,12 @@ label start_debug:
             $ current_room = "cabin_exterior"
         "Deploy to Manor Exterior":
             $ current_room = "manor_exterior"
+        "Deploy to Manor Garden":
+            $ current_room = "manor_garden"
+        "Deploy to Underground":
+            $ current_room = "manor_underground"
+        "Deploy to Core":
+            $ current_room = "manor_core"
     
     jump overworld_loop
 label test_hub:

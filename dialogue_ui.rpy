@@ -9,9 +9,29 @@ init python:
         except Exception:
             return Frame(Solid("#ead17a"), 10, 10)  # simple bordered fallback
 
+    _portrait_colors = {
+        "Dove": "#e1c400",
+        "Raven": "#4700d1",
+        "Swan": "#ffffff",
+        "Seagull": "#333366",
+        "Scarlet Tanager": "#0fa",
+        "Toucan": "#0fa",
+        "Hummingbird": "#0fa",
+        "Ptarmigan": "#0fa",
+        "Secretary": "#0fa",
+        "Falcon": "#0fa",
+        "Shrike": "#0fa",
+        "AUTOMATON GUIDE": "#0fa",
+        "System": "#e15a00",
+    }
+
+default _current_who = None
+
 # SAY: portrait left (taller), name bar + dialogue window right
 screen chat_say(who, what):
     zorder 150
+
+    on "show" action SetVariable("_current_who", who)
 
     hbox:
         spacing 80
@@ -24,7 +44,11 @@ screen chat_say(who, what):
             xsize 640
             ysize 680
             if not renpy.variant("small"):
-                add SideImage() align (0.5, 0.5)
+                if SideImage():
+                    add SideImage() align (0.5, 0.5)
+                elif who and who in _portrait_colors:
+                    add Solid(_portrait_colors[who], xsize=200, ysize=400) align (0.5, 0.5)
+                    text who size 24 color "#000" align (0.5, 0.9)
 
         # RIGHT: Name bar above the dialogue window
         vbox:
@@ -72,7 +96,11 @@ screen chat_choice(items):
             xsize 640
             ysize 680
             if not renpy.variant("small"):
-                add SideImage() align (0.5, 0.5)
+                if SideImage():
+                    add SideImage() align (0.5, 0.5)
+                elif _current_who and _current_who in _portrait_colors:
+                    add Solid(_portrait_colors[_current_who], xsize=200, ysize=400) align (0.5, 0.5)
+                    text _current_who size 24 color "#000" align (0.5, 0.9)
 
         frame:
             background ChatWindow(980, 620)   # taller to fit ~8 buttons

@@ -1,27 +1,34 @@
+# Dove flags
 default dove_soda_received = False
 default dove_soda_thanked = False
 default dove_asked_who = False
 default dove_asked_doing = False
-default dove_asked_kingsnakes = False
 default dove_asked_blight = False
 default dove_asked_soda = False
+default dove_asked_organic = False
 default dove_asked_chorus = False
 default dove_starlight = False
+default dove_asked_kingsnake = False
+default dove_asked_11 = False
+default dove_moved_to_sanctum = False
+default dove_talked_scarlet = False
+default dove_asked_dc = False
 
-default penguin_asked_here = False
-default penguin_asked_blight = False
-default penguin_asked_dying = False
-default penguin_asked_dead = False
-default penguin_asked_her = False
-default penguin_asked_him = False
-default penguin_asked_infected = False
-default penguin_asked_toucan = False
+# Seagull flags
+default seagull_asked_here = False
+default seagull_asked_blight = False
+default seagull_asked_dying = False
+default seagull_asked_dead = False
+default seagull_asked_her = False
+default seagull_asked_infected = False
+default seagull_asked_toucan = False
 
+# Scarlet flags
 default scarlet_still_alive = False
 default scarlet_asked_dead = False
 default scarlet_asked_aware = False
 default scarlet_asked_blight = False
-default scarlet_asked_survive = False
+default scarlet_asked_cleric = False
 
 # Crow conversation flags
 default crow_asked_who = False
@@ -40,6 +47,66 @@ default toucan_asked_hummingbird = False
 default toucan_asked_kingsnake = False
 default toucan_asked_blight = False
 
+# Hummingbird flags
+default hum_asked_arcade = False
+default hum_asked_aerospace = False
+default hum_asked_blight = False
+default hum_asked_blushwood = False
+default hum_asked_fae = False
+default hum_hacked = False
+default arcade_hacked = False
+
+# Secretary flags
+default sec_asked_enemy = False
+default sec_asked_name = False
+default sec_asked_who = False
+default sec_asked_blight = False
+default sec_asked_federal = False
+default heron_sec = False
+
+# Ptarmigan flags
+default pta_asked_who = False
+default pta_asked_blight = False
+default pta_asked_cabin = False
+default pta_asked_what = False
+default pta_asked_help = False
+
+# Swan flags
+default swan_asked_who = False
+default swan_asked_bloodmage = False
+default swan_asked_bloodlearn = False
+default swan_asked_falcon = False
+default swan_asked_location = False
+default swan_asked_mind = False
+default swan_killed = False
+default pigeon_told_human = False
+
+# Falcon flags
+default fal_first_time = True
+default fal_420_success = False
+default fal_asked_who = False
+default fal_asked_what = False
+default fal_asked_why = False
+default fal_asked_cleric = False
+default fal_asked_blight = False
+default fal_asked_killed = False
+default fal_asked_living = False
+default fal_asked_before = False
+default fal_asked_worm = False
+default fal_asked_gov = False
+default fal_angy = False
+
+# Shrike flags
+default shrike_asked_who = False
+default shrike_asked_creation = False
+default shrike_asked_bad = False
+default shrike_asked_disco = False
+default shrike_asked_blight = False
+default shrike_asked_die = False
+default shrike_asked_ghost = False
+default shrike_asked_off = False
+default shrike_asked_gov = False
+
 # --- D O V E ---
 
 label talk_dove_blushwood:
@@ -47,7 +114,7 @@ label talk_dove_blushwood:
     $ can_travel = False
 
     if dove_soda_received and not dove_soda_thanked:
-        d "You bought this for me? OHMYGOSH, thank you for the apricot soda!! You're the sweetest!! (;w;)!!!"
+        d "You bought this for me? OHMYGOSH, thank you for the orange soda!! You're the sweetest!! (;w;)!!!"
         d "..."
         d "I feel her energy radiating all around me, everywhere, we are all starlight in motion."
         $ dove_soda_thanked = True
@@ -86,11 +153,11 @@ label talk_dove_blushwood:
             $ dove_asked_chorus = True
             jump .dove_menu
 
-        "I'm here to investigate the Blight" if not dove_asked_kingsnakes:
-            d "Oh, yes, you must be the Cleric. The Kingsnakes did tell me to expect you."
+        "I'm here to investigate the Blight" if not dove_asked_kingsnake:
+            d "Oh, yes, you must be the Cleric. Kingsnake did tell me to expect you."
             d "Death always comes after Life (^_^)☀︎ Here's a key to the Orchard gates."
             $ inventory.add_item(item_db["sector_key"])
-            $ dove_asked_kingsnakes = True
+            $ dove_asked_kingsnake = True
             jump .dove_menu
 
         "Ask about Blight" if not dove_asked_blight:
@@ -108,11 +175,12 @@ label talk_dove_blushwood:
                     $ dove_asked_blight = True
                     jump .dove_menu
 
-        "Who do you mean, 'Her'?" if dove_starlight = True
+        "Who do you mean, 'Her'?" if dove_starlight:
             d "Oh! Forgive me, I think spending two weeks out here has made me comfortable in my solitude."
             d "Though you're a Cleric, too, so maybe you'll understand."
             d "Most members of the Church refer to the Sun in a masculine sense. And it's true that scripture says the same thing."
             d "But in my own personal faith... the Sun is a woman to me. It just feels right."
+            jump .dove_menu
         "(exit conversation)":
             if dove_moved_to_sanctum:
                 d "I'll be heading to the Inner Sanctum in Sundapple Square soon. I hope to see you there, sister."
@@ -127,64 +195,74 @@ label talk_dove_blushwood:
 
 # --- THE CIDER MILL INTERIOR ---
 
-label talk_penguin:
-    pen "If you're here to kill me, go ahead. Gun's empty."
-    label .penguin_menu:
+label talk_seagull:
+    seagull "You here to put me down? Go ahead. The gun's empty."
+    label .seagull_menu:
     menu:
-        "What happened here?" if not penguin_asked_here:
-            pen "I did my job. I killed an innocent woman for no good reason."
-            pen "And then, society collapsed. We live in a new world now, one where money, time, and God all mean nothing."
-            pen "Nothing. I killed her for absolutely nothing."
-            $ penguin_asked_here = True
-            jump .penguin_menu
+        "What happened here?" if not seagull_asked_here:
+            seagull "I did the job. I killed an innocent dame for no good reason."
+            seagull "And then, society collapsed. We live in a new world now, one where money, time, and God all mean nothing."
+            seagull "Nothing. I killed her for absolutely nothing."
+            $ seagull_asked_here = True
+            jump .seagull_menu
 
-        "Do you know anything about the Blight?" if not penguin_asked_blight:
-            pen "It turns people into trees. At least... I think they're trees."
-            pen "There's some around here. Dark, twisting branches with no leaves, and strange flickering colors. Reminds me of TV static."
-            pen "You might find pieces of viscera on and around them. It's the only thing left of the person that they used to be. As far as I can tell."
-            pen "..."
-            pen "I guess it doesn't kill you. It convinces you to stay until you're a place no one visits anymore."
-            pen "Came up here to try to get infected on purpose. I think it's working."
-            $ penguin_asked_blight = True
-            jump .penguin_menu
+        "Do you know anything about the Blight?" if not seagull_asked_blight:
+            seagull "The trees? It turns people into trees. At least... I think they're trees."
+            seagull "There's some around here. Dark, twisting branches with no leaves, and strange flickering colors. Reminds me of TV static."
+            seagull "You might find pieces of viscera on and around them. It's the only thing left of the person that they used to be. As far as I can tell."
+            seagull "..."
+            seagull "I guess it doesn't kill you. It convinces you to stay until you're a place no one visits anymore."
+            seagull "Came up here to try to get infected on purpose. I think it's working."
+            $ seagull_asked_blight = True
+            jump .seagull_menu
 
-        "You tried to get infected by the Blight?" if penguin_asked_blight and not penguin_asked_infected:
-            pen "Yeah. I deserve whatever's coming to me."
-            pen "So I'm just sitting here, waiting to die."
-            pen "Toucan might still be alive. Might even still have some booze. I left a key out by the cornfield. Take it... I don't need it anymore."
-            $ penguin_asked_infected = True
-            jump .penguin_menu
+        "Are you infected with the Blight?" if seagull_asked_blight and not seagull_asked_infected:
+            seagull "Yeah. I deserve whatever's coming to me."
+            seagull "So I'm just sitting here, waiting to die."
+            seagull "Toucan might still be alive. Might even still have some booze. I left a key out by the Hedge Maze. Take it... I don't need it anymore."
+            $ seagull_asked_infected = True
+            jump .seagull_menu
 
-        "Who is Toucan?" if penguin_asked_infected and not penguin_asked_toucan:
-            pen "An old associate. He runs the bar downstairs. Might ask you to play cards with him."
-            pen "I think he likes to pretend that money still means something in this world."
-            $ penguin_asked_toucan = True
-            jump .penguin_menu
+        "Who is Toucan?" if seagull_asked_infected and not seagull_asked_toucan:
+            seagull "An old associate. He runs the bar downstairs. Might ask you to play cards with him."
+            seagull "I think he likes to pretend that money still means something in this world."
+            $ seagull_asked_toucan = True
+            jump .seagull_menu
 
-        "You're close to dying..." if not penguin_asked_dying:
-            pen "Good. I owe the world at least that much."
-            $ penguin_asked_dying = True
-            jump .penguin_menu
+        "You look like you're close to dying..." if not seagull_asked_dying:
+            seagull "Good. I owe the world at least that much."
+            $ seagull_asked_dying = True
+            jump .seagull_menu
 
-        "Why do you think I'm here to kill you?" if penguin_asked_dying and not penguin_asked_dead:
-            pen "That's usually how this goes..."
-            $ penguin_asked_dead = True
-            jump .penguin_menu
+        "Why do you think I'm here to kill you?" if seagull_asked_dying and not seagull_asked_dead:
+            seagull "That's usually how this goes..."
+            $ seagull_asked_dead = True
+            jump .seagull_menu
 
-        "Who did you kill?" if penguin_asked_here and not penguin_asked_her:
-            pen "Scarlet Tanager. Her bodyguard and I used to be besties, before I started killing for money."
-            pen "I killed some people here, too... if they could still be called 'people'. They're trees."
+        "Who did you kill?" if seagull_asked_here and not seagull_asked_her:
+            seagull "Scarlet Tanager. Her bodyguard and I used to be besties, before I started killing for money."
+            seagull "I killed some people here, too... if they could still be called 'people'. They're trees."
             $ scarlet_still_alive = True
-            $ penguin_asked_her = True
-            jump .penguin_menu
+            $ seagull_asked_her = True
+            jump .seagull_menu
 
         "(exit conversation)":
             $ can_travel = True
             jump overworld_loop
 
-label heal_penguin:
-    pen "..."
-    pen "You shouldn't have wasted that on me."
+label heal_seagull:
+    seagull "..."
+    seagull "You shouldn't have wasted that on me."
+    menu:
+        "You'll just have to find a way to live with it.":
+            seagull "..."
+            seagull "..."
+            seagull "Yeah."
+            jump overworld_loop
+        "Scarlet's ghost is nearby..." if scarlet_still_alive:
+            seagull "..."
+            seagull "I know."
+            jump overworld_loop
     $ can_travel = True
     jump overworld_loop
 
@@ -213,33 +291,42 @@ label vending_machine_mill:
 # --- OTHER BLUSHWOOD LABELS ---
 
 label scarlet_gate:
-    sca "Look at me. I survived the end of the world."
+    sca "Well, well. Another Cleric. It is nice being able to talk to the living."
+    $ dove_talked_scarlet = True
     label .scarlet_menu:
     menu:
+        "I'm a Cleric?" if not scarlet_asked_cleric:
+            sca "You carry the death mark. I can see it."
+            sca "There aren't many of you left."
+            $ scarlet_asked_cleric = True
+            jump .scarlet_menu
+
         "What do you know about the Blight?" if not scarlet_asked_blight:
-            sca "The world grew sick of maintaining the illusion. Everything’s breaking."
+            sca "The world grew sick of maintaining the illusion. Everything's breaking."
+            sca "I watched it happen from here. The trees first, then the people."
+            sca "It is a kind of grief, I think. The world grieving itself."
             $ scarlet_asked_blight = True
             jump .scarlet_menu
 
         "Are you aware that you're dead?" if not scarlet_asked_aware:
             sca "Probably. If that's what you need to call it."
             sca "The brand outlives the girl."
+            sca "There is no more Hollywood, no more record labels, no more media industry. No television, no phones, no print."
+            sca "..."
+            sca "I've never felt more free in my life."
             $ scarlet_asked_aware = True
             jump .scarlet_menu
 
-        "Did you know the man who killed you is still alive?" if scarlet_still_alive and not scarlet_asked_dead:
-            sca "Of course he is. For men like him and women like me, survival is all we know how to do."
+        "Why is your ghost here?" if scarlet_asked_aware and not scarlet_asked_dead:
+            sca "Where else would I go?"
+            sca "This is the last place I was alive. The last place anyone knew the name Scarlet Tanagner."
+            sca "Fame is a strange haunting. It keeps you tethered."
             $ scarlet_asked_dead = True
             jump .scarlet_menu
 
-        "You didn't survive..." if scarlet_asked_dead and not scarlet_asked_survive:
-            sca "..."
-            sca "Didn't I, though? I'm a brand in a post-brand place. I'm the last of my kind."
-            sca "That's right, we're living in a new world."
-            sca "There is no more Hollywood, no more record labels, no more media industry. No television, no phones, no print. No more promised sky for stars to shine in."
-            sca "..."
-            sca "I've never felt more free in my life."
-            $ scarlet_asked_survive = True
+        "Did you know the man who killed you is still alive?" if scarlet_still_alive:
+            sca "Of course he is. For men like him and women like me, survival is all we know how to do."
+            sca "The Harbor Mafia doesn't waste assets. Even old ones."
             jump .scarlet_menu
 
         "I read that you died in the newspaper. Look, it says right here":
@@ -250,7 +337,6 @@ label scarlet_gate:
 
         "(exit conversation)":
             jump overworld_loop
-
 
 label talk_turkey:
     $ quick_menu = False
@@ -434,7 +520,7 @@ label talk_toucan:
 
             "There's a man dying upstairs..." if not toucan_asked_dying:
                 tou "He's still alive, then?"
-                tou "That's Penguin. He's an old friend... got himself mixed up in a lot of bad business with a lot of bad people."
+                tou "That's Seagull. He's an old friend... got himself mixed up in a lot of bad business with a lot of bad people."
                 tou "Wish there was something I could do to help him. He's so haunted by the past, I don't think he sees any possibility of a future."
                 tou "Got the kinds of demons in his head that can't be drowned out with booze."
                 tou "I keep hoping I'll hear him coming down those stairs one of these days, coming to say he's changed his mind and decided to give life another chance."
@@ -443,7 +529,7 @@ label talk_toucan:
                 $ toucan_asked_dying = True
                 jump .toucan_menu
 
-            "Did you know he murdered Scarlet Tananger?" if penguin_asked_her and toucan_asked_dying and not toucan_asked_scarlet:
+            "Did you know he murdered Scarlet Tanager?" if seagull_asked_her and toucan_asked_dying and not toucan_asked_scarlet:
                 tou "Did he tell you?"
                 tou "Not much point in hiding anything anymore..."
                 tou "That's just the kind of mess that tends to happen in the underbelly of Blushwood. And I'm no saint, either."
@@ -506,9 +592,42 @@ label heal_toucan:
 
 label talk_hummingbird:
     hum "..."
+    label .hummingbird_menu:
+    menu:
+        "Are you okay?" if not hum_asked_arcade:
+            hum "..."
+            hum "I'm waiting for the machine to come back on."
+            $ hum_asked_arcade = True
+            jump .hummingbird_menu
 
-    $ can_travel = True
-    jump overworld_loop
+        "What game is this?" if hum_asked_arcade and not hum_asked_aerospace:
+            hum "Aerospace Invaders."
+            hum "It's the only thing keeping me sane right now."
+            $ hum_asked_aerospace = True
+            jump .hummingbird_menu
+
+        "Do you know anything about the Blight?" if not hum_asked_blight:
+            hum "..."
+            hum "It's not a disease. It's a feeling."
+            hum "And some people can't stop feeling it."
+            $ hum_asked_blight = True
+            jump .hummingbird_menu
+
+        "What do you know about Blushwood Court?" if not hum_asked_blushwood:
+            hum "It's not real."
+            hum "None of it was ever real."
+            $ hum_asked_blushwood = True
+            jump .hummingbird_menu
+
+        "What do you know about Fae magic?" if not hum_asked_fae:
+            hum "..."
+            hum "I know that once it's in you, you can't get it out."
+            $ hum_asked_fae = True
+            jump .hummingbird_menu
+
+        "(exit conversation)":
+            $ can_travel = True
+            jump overworld_loop
 
 label talk_arcade_machine:
     $ quick_menu = False
@@ -532,13 +651,53 @@ label talk_arcade_machine:
 label talk_ptarmigan:
     pta "..."
     pta "is someone there?"
+    pta "[PROCESSING]"
     pta "..."
     pta "It's like I'm falling apart."
-    jump overworld_loop
+    label .ptarmigan_menu:
+    menu:
+        "Who are you?" if not pta_asked_who:
+            pta "[ALWAYS KNOWN THAT]"
+            pta "..."
+            pta "I think my name is... I think..."
+            pta "..."
+            $ pta_asked_who = True
+            jump .ptarmigan_menu
+
+        "What is the Blight?" if not pta_asked_blight:
+            pta "[THE EMPTY DEATH]"
+            pta "..."
+            $ pta_asked_blight = True
+            jump .ptarmigan_menu
+
+        "Do you know where we are?" if not pta_asked_cabin:
+            pta "..."
+            pta "The river. I came to the river."
+            pta "I was looking for something."
+            $ pta_asked_cabin = True
+            jump .ptarmigan_menu
+
+        "What were you looking for?" if pta_asked_cabin and not pta_asked_what:
+            pta "..."
+            $ pta_asked_what = True
+            jump .ptarmigan_menu
+
+        "Can I help you?" if not pta_asked_help:
+            pta "..."
+            pta "..."
+            pta "I don't know."
+            $ pta_asked_help = True
+            jump .ptarmigan_menu
+
+        "(exit conversation)":
+            $ can_travel = True
+            jump overworld_loop
 
 label heal_ptarmigan:
     "Your power washes over Ptarmigan, banishing the Blight from her eyes."
-    "PTARMIGAN" "I feel... lighter. Thank you, Cleric."
+    pta "I feel... lighter."
+    pta "..."
+    pta "Thank you, Cleric."
     $ can_travel = True
     jump overworld_loop
 
@@ -558,4 +717,340 @@ label after_delete_roots:
     "As you cast DELETE, the MAGICAL_ROOTS crackle and burn away, leaving the path to the cabin unblocked."
     "A presence waits by the threshold - an elegant, spectral figure of a SWAN. (Placeholder: Swan introductory event goes here.)"
     jump overworld_loop
+
+
+# --- S E C R E T A R Y ---
+
+label talk_secretary:
+    $ quick_menu = False
+    $ can_travel = False
+    sec "█████ ████ ███"
+    sec "Have you seen him? My enemy?"
+    label .secretary_menu:
+    menu:
+        "Who is your enemy?" if not sec_asked_enemy:
+            sec "█████"
+            sec "He's here. He's always here."
+            sec "He took my evidence. He took my case. He took everything."
+            $ sec_asked_enemy = True
+            jump .secretary_menu
+
+        "What is your enemy's name?" if sec_asked_enemy and not sec_asked_name:
+            sec "████████"
+            sec "I know his face. I know his voice."
+            sec "I just can't... I can't say it."
+            $ sec_asked_name = True
+            jump .secretary_menu
+
+        "Who are you?" if not sec_asked_who:
+            sec "I'm a federal investigator."
+            sec "Or I was."
+            sec "█████ ████"
+            $ sec_asked_who = True
+            jump .secretary_menu
+
+        "Do you know anything about the Blight?" if not sec_asked_blight:
+            sec "The Blight is him."
+            sec "He made it. He manufactured it. I have the documents."
+            sec "I have the documents, I have the documents, I have the—"
+            sec "..."
+            $ sec_asked_blight = True
+            jump .secretary_menu
+
+        "Are you a federal investigator?" if sec_asked_who and not sec_asked_federal:
+            sec "I was assigned to Blushwood Court by Kingsnake himself."
+            sec "I found something I wasn't supposed to find."
+            sec "And then I found myself here."
+            $ sec_asked_federal = True
+            jump .secretary_menu
+
+        "(exit conversation)":
+            $ can_travel = True
+            jump overworld_loop
+
+label heal_secretary:
+    "The Blight lifts from the Secretary's eyes. For a moment, she is completely still."
+    sec "..."
+    sec "Oh."
+    sec "Oh, I remember now."
+    sec "My name is... my name is Secretary."
+    sec "I was investigating a facility. The AVM facility. Kingsnake's project."
+    sec "There's a diner in Sundapple Square. Meet me there when you're ready."
+    sec "I have a lot to tell you."
+    $ secretary_healed = True
+    $ can_travel = True
+    jump overworld_loop
+
+
+# --- F A L C O N ---
+
+label talk_falcon:
+    $ quick_menu = False
+    $ can_travel = False
+    if fal_first_time:
+        fal "Identify yourself. Agent ID number."
+        $ fal_first_time = False
+        menu:
+            "420":
+                $ fal_420_success = True
+                fal "..."
+                fal "Clearance confirmed."
+                fal "I'm ready to give my post-mortem report."
+                jump .falcon_report_menu
+            "I don't have an ID number.":
+                $ fal_angy = True
+                fal "Then I can't speak with you."
+                fal "This is a classified operation."
+                jump .falcon_civilian_menu
+            "1776":
+                $ fal_angy = True
+                fal "Wrong."
+                jump .falcon_civilian_menu
+            "0000":
+                $ fal_angy = True
+                fal "Wrong."
+                jump .falcon_civilian_menu
+    else:
+        if fal_420_success:
+            jump .falcon_report_menu
+        else:
+            jump .falcon_civilian_menu
+
+    label .falcon_report_menu:
+    menu:
+        "Who are you?" if not fal_asked_who:
+            fal "Special Agent Falcon. Government field division."
+            fal "I was assigned to the Blushwood Court investigation."
+            $ fal_asked_who = True
+            jump .falcon_report_menu
+
+        "What was your assignment?" if not fal_asked_what:
+            fal "Third iteraction of the Grief Seed experiment."
+            fal "Observe. Document. Report."
+            fal "I did not complete my report."
+            $ fal_asked_what = True
+            jump .falcon_report_menu
+
+        "What is the Grief Seed experiment?" if fal_asked_what and not fal_asked_why:
+            fal "A controlled study in manufactured emotional collapse."
+            fal "The Blight is not a disease. It is a program."
+            fal "Someone wrote it. Someone deployed it."
+            $ fal_asked_why = True
+            jump .falcon_report_menu
+
+        "Are you infected with the Blight?" if not fal_asked_blight:
+            fal "Negative. I'm dead."
+            fal "The Blight doesn't affect the dead."
+            fal "That's the only advantage."
+            $ fal_asked_blight = True
+            jump .falcon_report_menu
+
+        "What killed you?" if not fal_asked_killed:
+            fal "..."
+            fal "The person I was protecting."
+            $ fal_asked_killed = True
+            jump .falcon_report_menu
+
+        "Who wrote the Blight program?" if fal_asked_why and not fal_asked_gov:
+            fal "That is classified."
+            fal "..."
+            fal "But you're a Cleric, and Clerics outrank my clearance level."
+            fal "Look for the worm."
+            $ fal_asked_gov = True
+            jump .falcon_report_menu
+
+        "What is the worm?" if fal_asked_gov and not fal_asked_worm:
+            fal "The core of the program. The self-replicating emotional vector."
+            fal "If you can find the worm, you can find the source."
+            $ fal_asked_worm = True
+            jump .falcon_report_menu
+
+        "(exit conversation)":
+            $ can_travel = True
+            jump overworld_loop
+
+    label .falcon_civilian_menu:
+    menu:
+        "I'm a Cleric, investigating the Blight." if not fal_asked_cleric:
+            fal "..."
+            fal "A Cleric."
+            fal "Then you already know more than I do."
+            $ fal_asked_cleric = True
+            jump .falcon_civilian_menu
+
+        "What do you know about this place?" if not fal_asked_before:
+            fal "I was stationed here."
+            fal "Before."
+            $ fal_asked_before = True
+            jump .falcon_civilian_menu
+
+        "Are you still alive?" if not fal_asked_living:
+            fal "No."
+            $ fal_asked_living = True
+            jump .falcon_civilian_menu
+
+        "(exit conversation)":
+            $ can_travel = True
+            jump overworld_loop
+
+
+# --- S H R I K E ---
+
+label talk_shrike:
+    $ quick_menu = False
+    $ can_travel = False
+    shrike "..."
+    shrike "So. You found the Core."
+    label .shrike_menu:
+    menu:
+        "Who are you?" if not shrike_asked_who:
+            shrike "I built this place."
+            shrike "Every inch of it. Every tree, every cobblestone, every face."
+            shrike "My name is Shrike."
+            $ shrike_asked_who = True
+            jump .shrike_menu
+
+        "What is the Glamour Lattice?" if shrike_asked_who and not shrike_asked_creation:
+            shrike "A structure of living memory."
+            shrike "I designed it to hold the shape of a world that people actually wanted to live in."
+            shrike "It worked, for a while."
+            $ shrike_asked_creation = True
+            jump .shrike_menu
+
+        "What went wrong?" if shrike_asked_creation and not shrike_asked_bad:
+            shrike "Nothing went wrong."
+            shrike "Everything went exactly as it was designed to."
+            shrike "That was the problem."
+            $ shrike_asked_bad = True
+            jump .shrike_menu
+
+        "What do you know about the Blight?" if not shrike_asked_blight:
+            shrike "The Blight is the Lattice turning inward."
+            shrike "When the illusion can no longer sustain itself, it starts consuming the things inside it."
+            shrike "The people first. Then the architecture."
+            shrike "Then the Core."
+            $ shrike_asked_blight = True
+            jump .shrike_menu
+
+        "Are you dead?" if not shrike_asked_die:
+            shrike "Yes."
+            shrike "I chose it."
+            shrike "Someone had to stay in the Core and keep it stable. And I couldn't ask anyone else to do that."
+            $ shrike_asked_die = True
+            jump .shrike_menu
+
+        "Why are you still here?" if shrike_asked_die and not shrike_asked_ghost:
+            shrike "The Core is the anchor point of the Lattice."
+            shrike "As long as the Lattice exists, so do I."
+            $ shrike_asked_ghost = True
+            jump .shrike_menu
+
+        "Can I turn the Glamour Lattice off?" if shrike_asked_ghost and not shrike_asked_off:
+            shrike "You could."
+            shrike "But everything inside it would dissolve."
+            shrike "Everyone in Blushwood Court would..."
+            shrike "..."
+            shrike "There might be another way. But I don't know it yet."
+            $ shrike_asked_off = True
+            jump .shrike_menu
+
+        "Who built this place originally?" if shrike_asked_creation and not shrike_asked_disco:
+            shrike "The government commissioned it."
+            shrike "A controlled environment for social research."
+            shrike "They wanted to see what people do when everything is provided for them."
+            $ shrike_asked_disco = True
+            jump .shrike_menu
+
+        "Who authorized the Grief Seed experiment?" if shrike_asked_disco and not shrike_asked_gov:
+            shrike "..."
+            shrike "I don't know that name."
+            shrike "But someone with very high clearance modified the Lattice parameters after I died."
+            shrike "I couldn't stop it."
+            $ shrike_asked_gov = True
+            jump .shrike_menu
+
+        "(exit conversation)":
+            $ can_travel = True
+            jump overworld_loop
+
+
+# --- S W A N  M A N O R ---
+
+label talk_swan_manor:
+    $ quick_menu = False
+    $ can_travel = False
+    s "You made it."
+    label .swan_manor_menu:
+    menu:
+        "Who are you?" if not swan_asked_who:
+            s "Swan."
+            s "I'm a Blood Mage. Among other things."
+            $ swan_asked_who = True
+            jump .swan_manor_menu
+
+        "What is a Blood Mage?" if swan_asked_who and not swan_asked_bloodmage:
+            s "Someone who uses their own life force as a power source."
+            s "It's not a career path I'd recommend."
+            $ swan_asked_bloodmage = True
+            jump .swan_manor_menu
+
+        "How are you not infected?" if not swan_asked_location:
+            menu:
+                "You seem immune to the Blight.":
+                    s "Blood Magic is a complete internal system. The Blight has nothing to interface with."
+                    jump .swan_manor_menu
+                "Is it because you're a Blood Mage?":
+                    s "That's part of it."
+                    s "The rest is... complicated."
+                    jump .swan_manor_menu
+                "Did Pigeon tell you about me?" if pigeon_told_human:
+                    s "..."
+                    s "Yes."
+                    s "That's why I'm talking to you."
+                    jump .swan_manor_menu
+                "(say nothing)":
+                    s "..."
+                    jump .swan_manor_menu
+            $ swan_asked_location = True
+
+        "What happened at the Cabin?" if not swan_asked_falcon:
+            s "..."
+            s "That's a long conversation."
+            s "The short version: I was protecting someone. Someone died protecting me instead."
+            s "I've been dealing with the aftermath ever since."
+            $ swan_asked_falcon = True
+            jump .swan_manor_menu
+
+        "What do you know about Kingsnake?" if not swan_asked_mind:
+            s "He's my stepfather."
+            s "..."
+            s "Yes. I know."
+            $ swan_asked_mind = True
+            jump .swan_manor_menu
+
+        "Can you teach me Blood Magic?" if swan_asked_bloodmage and not swan_asked_bloodlearn:
+            s "No."
+            s "Not because I don't want to. Because it would kill you."
+            s "You'd need to be... differently constructed."
+            $ swan_asked_bloodlearn = True
+            jump .swan_manor_menu
+
+        "(exit conversation)":
+            $ can_travel = True
+            jump overworld_loop
+
+label swan_avm_confirm:
+    s "The AVM facility is northeast of the map."
+    s "You'll need clearance to get in."
+    s "I can get you that clearance."
+    s "But once you go in... things will change."
+    menu:
+        "I'm ready.":
+            $ avm_facility_accessible = True
+            s "Then go."
+            jump overworld_loop
+        "Not yet.":
+            s "..."
+            s "Come back when you are."
+            jump overworld_loop
 
