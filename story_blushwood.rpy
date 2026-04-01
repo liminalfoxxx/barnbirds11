@@ -1,4 +1,4 @@
-# Dove flags
+#~~~~~~Dove flags
 default dove_soda_received = False
 default dove_soda_thanked = False
 default dove_asked_who = False
@@ -14,7 +14,7 @@ default dove_moved_to_sanctum = False
 default dove_talked_scarlet = False
 default dove_asked_dc = False
 
-# Seagull flags
+#~~~~~~~Seagull flags
 default seagull_asked_here = False
 default seagull_asked_blight = False
 default seagull_asked_dying = False
@@ -23,14 +23,14 @@ default seagull_asked_her = False
 default seagull_asked_infected = False
 default seagull_asked_toucan = False
 
-# Scarlet flags
+#~~~~~~~~~Scarlet flags
 default scarlet_still_alive = False
 default scarlet_asked_dead = False
 default scarlet_asked_aware = False
 default scarlet_asked_blight = False
 default scarlet_asked_cleric = False
 
-# Crow conversation flags
+#~~~~~~~~Crow flags
 default crow_asked_who = False
 default crow_asked_bird = False
 default crow_asked_blight = False
@@ -116,21 +116,21 @@ label talk_dove_blushwood:
     if dove_soda_received and not dove_soda_thanked:
         d "You bought this for me?? Oh, you didn't have to do that, OHMYGOSH, orange soda!!! You're the sweetest!! (;w;)!!!"
         d "..."
-        d "I feel her energy radiating all around us, everywhere, we are all starlight in motion."
+        d "I feel Her energy radiating all around us, everywhere, we are all starlight in motion."
         $ dove_soda_thanked = True
     else:
-        d "Good evening, sister. Walk gently, there is a terrible empty darkness beyond these gates."
+        d "Good evening, sister. Walk gently, there is a terrible Blight beyond these gates."
         $ dove_starlight = True
 
     label .dove_menu:
     menu:
         "Why do you like orange soda so much?" if dove_soda_received and not dove_asked_soda:
-            d "Oranges carry the sun's blessing, every single one of them (^_^)☀︎"
-            d "You can taste it if you pay attention, that loving warmth… and when it's in soda form, it bubbles, just like the surface of the sun!!"
+            d "Oranges carry the Sun's blessing, every single one of them (^_^)☀︎"
+            d "You can taste it if you pay attention, that loving warmth… and it bubbles, just like the surface of the sun!!"
             $ dove_asked_soda = True
             jump .dove_menu
 
-        "Soda is flavored syrup, though. That doesn't have any actual orange juice, does it?" if dove_asked_soda and not dove_asked_organic:
+        "Soda is just flavored syrup, though. That doesn't have any actual orange juice, does it?" if dove_asked_soda and not dove_asked_organic:
             d "Oh, most soda is just sugar and chemicals, you're right about that."
             d "But orange soda is actually protected by the Church here- has to be organic by law (^_^)☀︎"
             d "Which means every sip is exactly as the Sun intended."
@@ -144,9 +144,9 @@ label talk_dove_blushwood:
             jump .dove_menu
 
         "What are you doing?" if not dove_asked_doing:
-            d "Casting a spell protection spell. I'm keeping the Blight from spreading to the rest of the forest."
+            d "Casting a protection spell. I'm keeping the Blight from spreading to the rest of the forest."
             d "Blushwood Court is already lost, I think. I grieve that. But I can at least try to keep it contained."
-            d "I don't love quarantine work. There's something about drawing walls around suffering that makes me uneasy."
+            d "I don't love quarantine work."
             d "But sometimes a boundary is an act of love."
             d "The sun is setting for today. I will be resting soon... then back to casting after the Dawn Chorus."
             $ dove_asked_doing = True
@@ -154,32 +154,32 @@ label talk_dove_blushwood:
 
         "What is the Dawn Chorus?" if dove_asked_doing and not dove_asked_chorus:
             d "You're unfamiliar with the Dawn Chorus? It's an old tradition. Primal, some would say. Probably not something practiced much among Owls."
-            d "But I can't imagine starting the day without singing to the sun."
+            d "But I can't imagine starting the day without singing to the Sun."
             d "It isn't really my song, though. I just… lend it my voice."
-            d "It's the sound the air makes when the light comes back. When God returns, and the world remembers She exists."
+            d "It's the sound the air makes when the light comes back, when God returns, and the world remembers She exists."
             d "We sing the shape of the world back into form before the first light spills over the edge of everything."
-            d "It's how we say that we are still here. We still see you. ☀︎"
+            d "It's how we say that we are still here. We still alive and we see you. ☀︎"
             d "..."
-            d "Between the two of us… I think the Chorus is why the Blight hasn't found its way to me yet."
-            d "When you name the morning out loud, the Void has less room to argue."
+            d "Between the two of us… I think my practice of the Chorus is why the Blight hasn't found its way to me yet."
+            d "When you name who you are in the world out loud, you give the Void has less room to argue."
             $ dove_asked_chorus = True
             jump .dove_menu
 
         "Did you know there's a ghost next to the gate?" if dove_talked_scarlet:
-            d "Ah, so you've met Scarlet Tananger. It breaks my heart, what happened to her… "
-            d "I've spoken with her. She's still here, still herself, still bright."
+            d "Ah, so you've met Scarlet Tanager. It breaks my heart, what happened to her… "
+            d "I've spoken with her. She's still here, still herself, still radiant."
             d "She doesn't know much more about the Blight than I do, I'm afraid. But her perspective may be worth seeking out."
             d "As a Death Cleric… you'll be able to hear her in ways that I simply cannot."
             jump .dove_menu
 
         "What is a Death Cleric?" if dove_talked_scarlet and not dove_asked_dc:
-            d "A beautiful thing to be. Many people think Death is scary, but it's a necessary transformation."
+            d "A beautiful thing to be. Many people think Death is sad or scary, but it's a necessary transformation."
             d "You're more attuned to it than most. That space between the end and the beginning."
             $ dove_asked_dc = True
             jump .dove_menu
 
         "I'm here to investigate the Blight" if not dove_asked_blight:
-            d "Oh, yes, you must be the Cleric they sent for. Yes, Kingsnake mentioned you would be coming."
+            d "Oh, yes, you must be the Death Cleric they sent for. Yes, Kingsnake mentioned you would be coming."
             d "Death always follows closely behind Life. That's not a sad thing, it's just the shape of it (^_^)☀︎"
             d "Here. A key to the Gate. Please be careful in there."
             $ inventory.add_item(item_db["sector_key"])
@@ -195,7 +195,7 @@ label talk_dove_blushwood:
             jump .dove_menu
 
         "Ask about Blight" if not dove_asked_blight:
-            d "From what I've seen… it feels like Void magic. But it feels… hollow, and synthetic."
+            d "From what I've seen… it feels like Void magic. But... synthetic, somehow."
             d "I've been out here casting for 11 days now, and I still don't fully understand what I'm pushing back against."
             d "Darkness itself isn't something to fear. Everything living casts a shadow, that's just the shape of being real."
             d "Usually, all darkness needs is to be loved. Met with light, gently, and it softens."
