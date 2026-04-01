@@ -47,6 +47,18 @@ init -10 python:
                 if store.npc_swan not in current_list:
                     current_list.append(store.npc_swan)
 
+            # Seagull: Remove from Cider Mill Interior after healed
+            if self.name == "CIDER_MILL_INTERIOR" and getattr(store, "seagull_healed", False):
+                current_list = [obj for obj in current_list if obj.name != "SEAGULL"]
+
+            # Secretary: Remove from Hedge Maze after healed
+            if self.name == "HEDGE_MAZE" and getattr(store, "secretary_healed", False):
+                current_list = [obj for obj in current_list if obj.name != "SECRETARY"]
+
+            # Ptarmigan: Remove from current location after healed
+            if getattr(store, "ptarmigan_healed", False):
+                current_list = [obj for obj in current_list if obj.name != "PTARMIGAN"]
+
             return current_list
 
     def pick_up_item(target, inv, room_var_name):
@@ -117,6 +129,9 @@ define item_db = {
     "jack_o_lantern": Item("Jack o Lantern", cost=0, description="A carved pumpkin emitting a warm glow."),
     "poison": Item("Poison", cost=0, description="This will kill you.", use_func=use_poison),
     "Destruction_Scroll": Item("Destruction_Scroll", cost=0, description="A forbidden spell scroll capable of deleting world geometry."),
+    "placeholder_a": Item("Placeholder_A", cost=0, description="A placeholder spell component. TBD."),
+    "placeholder_b": Item("Placeholder_B", cost=0, description="A placeholder spell component. TBD."),
+    "placeholder_c": Item("Placeholder_C", cost=0, description="A placeholder spell component. TBD."),
 }
 
 # --- STEP 3: World Creation ---
@@ -124,7 +139,7 @@ define item_db = {
 # --- BLUSHWOOD OBJECTS ---
 default sector_gate = WorldObject(name = "SECTOR_GATE", description = "A massive digital barrier.", img = Solid("#111", xsize=300, ysize=300), sprite = Solid("#333", xsize=100, ysize=200), x=450, y=50, locked=True)
 default forest_dove = WorldObject("DOVE", "The MOURNING DOVE.", Solid("#e15a00", xsize=300, ysize=300), Solid("#ffffff", xsize=50, ysize=50), x=500, y=300, can_talk=True, can_cast=True, label="talk_dove_blushwood")
-default ghost_dealer = WorldObject("Scarlet Spectre", "A hovering entity", Solid("#444", xsize=300, ysize=300), Solid("#fff", xsize=50, ysize=50), x=400, y=250, can_talk=False, can_cast=True, label="scarlet_gate")
+default ghost_dealer = WorldObject("SCARLET_TANAGER", "The ghost of Scarlet Tanager, legendary songstress.", Solid("#444", xsize=300, ysize=300), Solid("#fff", xsize=50, ysize=50), x=400, y=250, can_talk=False, can_cast=True, label="scarlet_gate")
 default herb_belladonna = WorldObject(name = "Belladonna", description = "Toxic perennial.", img = Solid("#005500", xsize=300, ysize=300), sprite = Solid("#00ff00", xsize=40, ysize=40), x=700, y=450, can_take=True)
 default crossroads_sign = WorldObject(
     name = "Automaton Guide",
@@ -165,7 +180,7 @@ default slot_machine = WorldObject(
 default mill_door = WorldObject(name="MILL_DOOR", description="The heavy oak door.", img=Solid("#321", xsize=300, ysize=300), sprite=Solid("#432", xsize=60, ysize=80), x=450, y=200, can_open=True, label="enter_mill")
 default mill_dog = WorldObject(name="STRAY_DOG", description="A scruffy dog napping in the shade.", img=Solid("#642", xsize=250, ysize=200), sprite=Solid("#531", xsize=40, ysize=30), x=200, y=400, can_talk=True, can_cast=True, label="talk_dog")
 default vending_machine = WorldObject(name="VENDING_MACHINE", description="A rusted 'GULP_CORP' machine.", img=Solid("#800", xsize=300, ysize=400), sprite=Solid("#911", xsize=50, ysize=90), x=700, y=250, can_talk=True, label="vending_machine_ui")
-default npc_penguin = WorldObject(name="PENGUIN", description="A Penguin sits slumped against the wall. The gun by his hand hasn't moved in a while. Neither has he.", img=Solid("#003", xsize=300, ysize=400), sprite=Solid("#005", xsize=60, ysize=100), x=600, y=250, can_talk=True, label="talk_penguin")
+default npc_seagull = WorldObject(name="SEAGULL", description="A Seagull sits slumped against the wall. The gun by his hand hasn't moved in a while. Neither has he.", img=Solid("#003", xsize=300, ysize=400), sprite=Solid("#005", xsize=60, ysize=100), x=600, y=250, can_talk=True, can_cast=True, label="talk_seagull")
 default item_apple = WorldObject(name="Apple", description="Organic data container.", img=Solid("#f00", xsize=200, ysize=200), sprite=Solid("#d00", xsize=25, ysize=25), x=200, y=450, can_take=True)
 default mill_trap_door = WorldObject(name="TRAP_DOOR", description="A wooden door in the floor.", img=Solid("#210", xsize=300, ysize=200), sprite=Solid("#321", xsize=100, ysize=60), x=450, y=500, can_open=True, locked=True, label="enter_hidden_bar")
 default npc_toucan = WorldObject("TOUCAN", "A bright bird offering a game of chance.", Solid("#f0f", xsize=300), Solid("#f0f", xsize=60), 300, 250, can_talk=True, label="talk_toucan")
@@ -176,6 +191,42 @@ default item_river_herb = WorldObject(name="River_Herb", description="A strange 
 default cabin_roots = WorldObject(name="MAGICAL_ROOTS", description="Giant, blocking roots.", img=Solid("#220", xsize=500, ysize=500), sprite=Solid("#331", xsize=200, ysize=300), x=400, y=100, can_cast=True, label="cabin_blocked")
 # NEW: Cabin door (unlocks after roots deleted)
 default cabin_door = WorldObject(name="CABIN_DOOR", description="A weathered cabin door.", img=Solid("#310", xsize=200, ysize=300), sprite=Solid("#421", xsize=60, ysize=90), x=500, y=220, can_open=True, locked=True, label="enter_cabin")
+
+# Secretary (in Hedge Maze)
+default npc_secretary = WorldObject(
+    name="SECRETARY",
+    description="A woman pacing in erratic circles, muttering about evidence and enemies.",
+    img=Solid("#0fa", xsize=300, ysize=400),
+    sprite=Solid("#0fa", xsize=60, ysize=100),
+    x=300, y=350,
+    can_talk=True,
+    can_cast=True,
+    label="talk_secretary"
+)
+
+# Falcon ghost (in Cabin Interior) - requires Ghost_Speak
+default npc_falcon = WorldObject(
+    name="FALCON",
+    description="The spectral outline of a government field agent.",
+    img=Solid("#0fa", xsize=300, ysize=400),
+    sprite=Solid("#0fa", xsize=60, ysize=100),
+    x=200, y=200,
+    can_talk=False,
+    can_cast=True,
+    label="talk_falcon"
+)
+
+# Shrike ghost (in Core) - requires Ghost_Speak
+default npc_shrike = WorldObject(
+    name="SHRIKE",
+    description="A spectral architect surrounded by shimmering lattice fragments.",
+    img=Solid("#0fa", xsize=300, ysize=400),
+    sprite=Solid("#0fa", xsize=60, ysize=100),
+    x=500, y=300,
+    can_talk=False,
+    can_cast=True,
+    label="talk_shrike"
+)
 
 # --- SUNDAPPLE OBJECTS ---
 default npc_magpie = WorldObject("MAGIE", "Curious bird watching the crowd.", Solid("#000", xsize=300), Solid("#222", xsize=60), 100, 300, can_talk=True, label="talk_magpie")
@@ -215,24 +266,24 @@ default npc_swan = WorldObject("SWAN", "A spectral presence within the manor.", 
 default blushwood_1 = Room("GATE", Solid("#1a1a1a"), north="blushwood_2", 
     contents=[forest_dove, ghost_dealer, herb_belladonna, sector_gate])
 
-default blushwood_2 = Room("CROSSROADS", Solid("#2a2a2a"), south="blushwood_1", 
-    north="manor_exterior", west="pumpkin_patch", east="cider_mill", 
+default blushwood_2 = Room("PLAZA", Solid("#2a2a2a"), south="blushwood_1", 
+    north="manor_exterior", west="carousel", east="cider_mill", 
     contents=[crossroads_sign, herb_mandrake])
 
 default manor_exterior = Room("MANOR_GATE", Solid("#050505"), south="blushwood_2", 
     contents=[manor_door])
 
-default pumpkin_patch = Room("PUMPKIN_PATCH", Solid("#331100"), east="blushwood_2", 
-    west="corn_maze", contents=[patch_cat, jack_o_lantern])
+default carousel = Room("CAROUSEL", Solid("#331100"), east="blushwood_2", 
+    west="hedge_maze", contents=[patch_cat, jack_o_lantern])
 
-default corn_maze = Room("CORN_MAZE", Solid("#111100"), east="pumpkin_patch", 
-    contents=[maze_crow, maze_ghost, item_corn, item_bone, item_bar_key])
+default hedge_maze = Room("HEDGE_MAZE", Solid("#111100"), east="carousel", 
+    contents=[maze_crow, maze_ghost, item_corn, item_bone, item_bar_key, npc_secretary])
 
 default cider_mill = Room("CIDER_MILL", Solid("#112211"), west="blushwood_2", 
     north="river_bank", contents=[mill_door, mill_dog, vending_machine_mill])
 
-default cider_mill_interior = Room("MILL_INTERIOR", Solid("#050505"), south="cider_mill", 
-    contents=[npc_penguin, item_apple, mill_trap_door])
+default cider_mill_interior = Room("CIDER_MILL_INTERIOR", Solid("#050505"), south="cider_mill", 
+    contents=[npc_seagull, item_apple, mill_trap_door])
 
 default hidden_bar = Room("HIDDEN_BAR", Solid("#200"), south="cider_mill_interior",
     contents=[npc_toucan, npc_hummingbird, slot_machine, arcade_machine])
@@ -245,9 +296,32 @@ default cabin_exterior = Room("CABIN_EXTERIOR", Solid("#1a0000"), south="river_b
 
 # NEW: Cabin interior and Manor interior rooms
 default cabin_interior = Room("CABIN_INTERIOR", Solid("#2a0000"), south="cabin_exterior",
-    contents=[])
+    contents=[npc_falcon])
 default manor_interior = Room("MANOR_INTERIOR", Solid("#0a0a0a"), south="manor_exterior",
+    north="manor_garden",
     contents=[])
+
+# Manor mini-dungeon rooms
+default manor_garden = Room(
+    name="GARDEN",
+    art=Solid("#040", xsize=1000, ysize=600),
+    south="manor_interior",
+    north="manor_underground"
+)
+
+default manor_underground = Room(
+    name="UNDERGROUND",
+    art=Solid("#111", xsize=1000, ysize=600),
+    south="manor_garden",
+    north="manor_core"
+)
+
+default manor_core = Room(
+    name="CORE",
+    art=Solid("#202", xsize=1000, ysize=600),
+    south="manor_underground",
+    contents=[npc_shrike]
+)
 
 # --- SECTOR 02: SUNDAPPLE SQUARE ---
 default sundapple_1 = Room("MALL", Solid("#ffcc00"), north="sd_church", 

@@ -21,11 +21,11 @@ define s = Character(
     image="swan",
     what_color="#000000",
 )
-define pen = Character(
-    "Penguin",
+define seagull = Character(
+    "Seagull",
     color="#333366",
     window_background=Frame("images/ui/text_yellow.png"),
-    image="penguin",
+    image="seagull",
     what_color="#000000",
 )
 define sca = Character(
@@ -59,7 +59,7 @@ define tou = Character(
     what_italic=True,
 )
 define hum = Character(
-    "Hummingbord",
+    "Hummingbird",
     color="#0fa",
     window_background=None,
     what_italic=True,
@@ -112,8 +112,19 @@ define hen = Character(
     window_background=None,
     what_italic=True,
 )
-define shrike = Character(
-    "Shrike",
+define sec = Character(
+    "Secretary",
+    color="#0fa",
+    window_background=None,
+    what_italic=True,
+)
+define fal = Character(
+    "Falcon",
+    color="#0fa",
+    window_background=None,
+    what_italic=True,
+)
+
     color="#0fa",
     window_background=None,
     what_italic=True,
@@ -164,7 +175,7 @@ default character_db = {
     "dove": d,
     "raven": r,
     "swan": s,
-    "penguin": pen,
+    "seagull": seagull,
     "pigeon": p,
     "ptarmigan": pta,
     "system": sys,
@@ -189,6 +200,8 @@ default character_db = {
     "ghost": ghost,
     "hummingbird": hum,
     "shrike": shrike,
+    "secretary": sec,
+    "falcon": fal,
     "robin": robin,
     "canary": can,
     "peacock": peacock,

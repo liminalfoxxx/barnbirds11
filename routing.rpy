@@ -121,10 +121,24 @@ label raven_lock_in_choice:
 # Swan skeleton
 
 label swan_intro:
-    # Called once right after roots are deleted; Swan appears via dialogue (not overworld yet).
-    "SWAN" "So you opened the door. The manor awaits."
+    s "…"
+    s "Out of my way."
+    menu:
+        "Who are you?":
+            s "The reason you're still breathing."
+            s "…"
+            s "I'm going to the Manor. Find me there."
+        "What are you?":
+            s "A serial killer."
+            s "I'm going to the Manor. Find me there."
+        "What happened here?":
+            s "Not here."
+            s "The Manor. We can talk there."
+        "(move out of his way)":
+            s "…"
+            s "Good instincts."
+            s "Come find me at the Manor when you're ready. There are things I'd like to discuss with you."
     $ swan_route_stage = 2
-    # Unlock the manor interior door
     $ manor_unlocked = True
     $ manor_door.locked = False
     return

@@ -11,9 +11,9 @@ image raven neutral = "images/portraits/raven_neutral.png"
 image raven smile = "images/portraits/raven_smile.png"
 image raven serious = "images/portraits/raven_serious.png"
 
-# PENGUIN portraits
-image penguin neutral = "images/portraits/penguin_neutral.png"
-image penguin tired = "images/portraits/penguin_tired.png"
+# SEAGULL portraits
+image seagull neutral = "images/portraits/seagull_neutral.png"
+image seagull tired = "images/portraits/seagull_tired.png"
 
 # PTARMIGAN portraits
 image ptarmigan neutral = "images/portraits/ptarmigan_neutral.png"
@@ -22,5 +22,5 @@ image ptarmigan relieved = "images/portraits/ptarmigan_relieved.png"
 # Usage in script:
 #   d happy "Thanks for the soda!"
 #   r serious "The archives are a mess."
-#   pen tired "Gun's empty."
+#   seagull tired "Gun's empty."
 # Ren'Py's SideImage will swap to the matching portrait automatically.
