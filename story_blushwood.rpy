@@ -410,6 +410,12 @@ label enter_cabin:
     "The cabin door creaks open. You step inside."
     jump overworld_loop
 
+label enter_manor:
+    $ current_room = "manor_interior"
+    $ current_target = None
+    "The ornate gate swings open. You step into the manor."
+    jump overworld_loop
+
 label talk_cat:
     if not can_speak_with_animals:
         "The black cat sits perched on a candy pumpkin, watching you curiously."
