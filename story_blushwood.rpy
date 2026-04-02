@@ -153,14 +153,14 @@ label talk_dove_blushwood:
             jump .dove_menu
 
         "What is the Dawn Chorus?" if dove_asked_doing and not dove_asked_chorus:
-            d "You're unfamiliar with the Dawn Chorus? It's an old tradition. Primal, some would say. Probably not something practiced much among Owls."
+            d "You're unfamiliar with the Dawn Chorus☀︎? It's an old tradition. Primal, some would say. Probably not something practiced much among Owls."
             d "But I can't imagine starting the day without singing to the Sun."
             d "It isn't really my song, though. I just… lend it my voice."
             d "It's the sound the air makes when the light comes back, when God returns, and the world remembers She exists."
             d "We sing the shape of the world back into form before the first light spills over the edge of everything."
             d "It's how we say that we are still here. We still alive and we see you. ☀︎"
             d "..."
-            d "Between the two of us… I think my practice of the Chorus is why the Blight hasn't found its way to me yet."
+            d "Between the two of us… I think my practice of the Chorus☀︎ is why the Blight hasn't found its way to me yet."
             d "When you name who you are in the world out loud, you give the Void has less room to argue."
             $ dove_asked_chorus = True
             jump .dove_menu
