@@ -878,13 +878,13 @@ label talk_falcon:
             jump .falcon_report_menu
 
         "What was your assignment?" if not fal_asked_what:
-            fal "Third iteraction of the Grief Seed experiment."
+            fal "Third iteraction of the Lacuna 0 experiment."
             fal "Observe. Document. Report."
             fal "I did not complete my report."
             $ fal_asked_what = True
             jump .falcon_report_menu
 
-        "What is the Grief Seed experiment?" if fal_asked_what and not fal_asked_why:
+        "What is the Lacuna 0 experiment?" if fal_asked_what and not fal_asked_why:
             fal "A controlled study in manufactured emotional collapse."
             fal "The Blight is not a disease. It is a program."
             fal "Someone wrote it. Someone deployed it."
@@ -1014,7 +1014,7 @@ label talk_shrike:
             $ shrike_asked_disco = True
             jump .shrike_menu
 
-        "Who authorized the Grief Seed experiment?" if shrike_asked_disco and not shrike_asked_gov:
+        "Who authorized the Lacuna 0 experiment?" if shrike_asked_disco and not shrike_asked_gov:
             shrike "..."
             shrike "I don't know that name."
             shrike "But someone with very high clearance modified the Lattice parameters after I died."
