@@ -25,23 +25,62 @@ default pigeon_route_unlocked = False
 default seagull_healed = False
 default secretary_healed = False
 default ptarmigan_healed = False
-default turkey_activated = False
 default cabin_roots_deleted = False
 
 # SPELL DEFINITIONS installed at start (for testing you can add more)
 default ghost_speak = Spell(
     name="Ghost_Speak.exe",
-    recipe= {"Belladonna": 1, "Candle": 1, "Cassette": 1},
-    description = "Opens communication with the departed.",
+    recipe={"Cassette": 1, "Belladonna": 1, "Mugwort": 1},
+    description="Opens communication with the departed.",
     frequency="death",
     resonance_cost=1
 )
 
 default animal_speak = Spell(
-    name="Speak with Animals",
-    recipe= {"Catnip": 1, "Bone": 1, "Candle": 1},
-    description = "ANIMAL_TRANSLATOR.EXE: Decodes feline/canine frequencies.",
+    name="Speak_With_Animals.exe",
+    recipe={"Honeycomb": 1, "Catnip": 1, "Bone": 1},
+    description="ANIMAL_TRANSLATOR.EXE: Decodes fauna frequencies.",
     frequency="primal",
+    resonance_cost=1
+)
+
+default hack = Spell(
+    name="Hack.exe",
+    recipe={"Circuit Board": 1, "Copper Wire": 1, "Quartz": 1},
+    description="Interfaces with devices and automation systems.",
+    frequency="storm",
+    resonance_cost=1
+)
+
+default heal_blight = Spell(
+    name="Heal_Blight.exe",
+    recipe={"Snowdrop": 1, "Lemon Balm": 1, "Candle": 1},
+    description="Cleanses a living system of the Blight.",
+    frequency="seelie",
+    resonance_cost=1
+)
+
+default prune = Spell(
+    name="Prune.exe",
+    recipe={"Foxglove": 1, "Sassafras": 1, "Corrupted Tape": 1},
+    description="Structural edit. Removes dead growth from the Lattice.",
+    frequency="unseelie",
+    resonance_cost=1
+)
+
+default satellite = Spell(
+    name="Satellite.exe",
+    recipe={"Apple": 1, "Gold Foil": 1, "Sunflower": 1},
+    description="Solar-powered bioscan. Reads a subject's frequency signature.",
+    frequency="life",
+    resonance_cost=1
+)
+
+default money_manifest = Spell(
+    name="Money_Manifest.exe",
+    recipe={"Bird of Paradise": 1, "Blood": 1, "Gold Coin": 1},
+    description="Blood magic extraction. Manifests currency from life force.",
+    frequency="blood",
     resonance_cost=1
 )
 
@@ -84,13 +123,10 @@ label start_normal:
     $ raven_route_stage = 0
     $ swan_route_stage = 0
     
-    # Give starting inventory (adjust as needed for your game design)
+    # Give starting inventory
     python:
         inventory = Inventory(money=10)
         inventory.learn_spell(ghost_speak)
-        inventory.learn_spell(animal_speak)
-        inventory.learn_spell(hack_prog)
-        inventory.learn_spell(heal_blight_prog)
     
     $ journal_entries = []
     $ journal_entries.append(JournalEntry("ROOT", "System Online", "2026-01-15", "OS stabilized. Cleric credentials verified. Blight investigation beginning in Sector 01."))
@@ -135,8 +171,11 @@ label start_debug:
         # Learn all spells
         inventory.learn_spell(ghost_speak)
         inventory.learn_spell(animal_speak)
-        inventory.learn_spell(hack_prog)
-        inventory.learn_spell(heal_blight_prog)
+        inventory.learn_spell(hack)
+        inventory.learn_spell(heal_blight)
+        inventory.learn_spell(prune)
+        inventory.learn_spell(satellite)
+        inventory.learn_spell(money_manifest)
         
         # Add all items
         for item_key in item_db:

@@ -125,6 +125,20 @@ screen world_interface():
                                 text "[current_target.name]" color "#e15a00" size 30 bold True
                                 text "[current_target.description]" size 20 color "#ccc"
 
+                                # Satellite diagnostic readout (persistent after scanning)
+                                $ _target_key = current_target.name.upper().replace(" ", "_")
+                                if _target_key in satellite_scanned and _target_key in npc_satellite_data:
+                                    $ _diag = npc_satellite_data[_target_key]
+                                    null height 8
+                                    add Solid("#e15a00", ysize=1, xfill=True)
+                                    null height 4
+                                    text "SATELLITE_OUTPUT:" color "#e15a00" size 14
+                                    text "FREQ .... [_diag['freq']]" color "#e15a00" size 13
+                                    text "SIGNAL .. [_diag['signal']]" color "#e15a00" size 13
+                                    text "STATUS .. [_diag['status']]" color "#e15a00" size 13
+                                    if _diag.get('flagged'):
+                                        text "[FLAGGED]: [_diag['flagged']]" color "#ff3300" size 13
+
                 # 4. INTERACTION COMMANDS
                 fixed:
                     xsize 440 ysize 340

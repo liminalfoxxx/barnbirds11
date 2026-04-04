@@ -380,22 +380,9 @@ label scarlet_gate:
             jump overworld_loop
 
 label talk_turkey:
-    $ quick_menu = False
-    $ can_travel = False
-    
-    turk "Attention all guests"
-    turk "In observance of THE END TIMES, all facilities are currently closed."
-    turk "We hope you have enjoyed your visit to the Blushwood Court :^)"
-    
-    $ quick_menu = True
-    $ can_travel = True
     jump overworld_loop
 
 label surge_turkey:
-    turk "..."
-    turk "HELLO OPERATOR, how may I be of service?"
-    turk "..."
-    $ can_travel = True
     jump overworld_loop
 
 label enter_mill:
@@ -764,11 +751,10 @@ label cabin_blocked:
 
 label after_delete_roots:
     $ cabin_roots_deleted = True
-    # Unlock the cabin door once roots are deleted
     $ cabin_unlocked = True
     $ cabin_door.locked = False
-    "As you cast DELETE, the MAGICAL_ROOTS crackle and burn away, leaving the path to the cabin unblocked."
-    "A presence waits by the threshold - an elegant, spectral figure of a SWAN. (Placeholder: Swan introductory event goes here.)"
+    "The roots crackle and wither as the Unseelie magic takes hold, pruning the dead growth from the Lattice."
+    "The path to the cabin stands open."
     jump overworld_loop
 
 

@@ -128,9 +128,21 @@ define item_db = {
     "pumpkin_pie": Item("Pumpkin Pie", cost=5, description="A warm dessert with the scent of Hallow's Eve", use_func=use_pumpkin_pie),
     "jack_o_lantern": Item("Jack o Lantern", cost=0, description="A carved pumpkin emitting a warm glow."),
     "poison": Item("Poison", cost=0, description="This will kill you.", use_func=use_poison),
-    "placeholder_a": Item("Placeholder_A", cost=0, description="A placeholder spell component. TBD."),
-    "placeholder_b": Item("Placeholder_B", cost=0, description="A placeholder spell component. TBD."),
-    "placeholder_c": Item("Placeholder_C", cost=0, description="A placeholder spell component. TBD."),
+    "mugwort": Item("Mugwort", cost=0, description="Artemisia. Named for the Moon Goddess. Smells like sleep."),
+    "honeycomb": Item("Honeycomb", cost=0, description="Every cell is a word. Every wall is a sentence. The hive speaks in architecture."),
+    "snowdrop": Item("Snowdrop", cost=0, description="Galanthus. Blooms in snow. The first proof each year that death is temporary."),
+    "lemon_balm": Item("Lemon Balm", cost=0, description="Melissa officinalis. The bees love it. Anything the bees love is worth trusting."),
+    "foxglove": Item("Foxglove", cost=0, description="Digitalis. Beautiful and precisely lethal."),
+    "sassafras": Item("Sassafras", cost=0, description="A root to remove roots. The irony is not lost."),
+    "corrupted_tape": Item("Corrupted Tape", cost=0, description="The data is still here. It's just not saying what it used to say."),
+    "gold_foil": Item("Gold Foil", cost=0, description="Thin enough to see light through. Reflective enough to bounce it back."),
+    "sunflower": Item("Sunflower", cost=0, description="Heliotropic. Turns to face the source of light no matter where it's placed. Even in your bag."),
+    "bird_of_paradise": Item("Bird of Paradise", cost=0, description="A flower that looks like it's about to take flight."),
+    "blood": Item("Blood", cost=0, description="Still warm."),
+    "gold_coin": Item("Gold Coin", cost=0, description="Pre-collapse currency. The metal is worthless. The belief that it has value is the valuable part."),
+    "circuit_board": Item("Circuit Board", cost=0, description="Silicon pathways etched in copper. A city for electrons."),
+    "copper_wire": Item("Copper Wire", cost=0, description="Carries current, carries signal, carries intention. It doesn't know the difference."),
+    "quartz": Item("Quartz", cost=0, description="Oscillates at 32,768 Hz when voltage is applied. Your watch runs on the same principle."),
 }
 
 # --- STEP 3: World Creation ---
@@ -140,16 +152,6 @@ default sector_gate = WorldObject(name = "SECTOR_GATE", description = "A massive
 default forest_dove = WorldObject("DOVE", "The MOURNING DOVE.", Solid("#e15a00", xsize=300, ysize=300), Solid("#ffffff", xsize=50, ysize=50), x=500, y=300, can_talk=True, can_cast=True, label="talk_dove_blushwood")
 default ghost_dealer = WorldObject("SCARLET_TANAGER", "The ghost of Scarlet Tanager, legendary songstress.", Solid("#444", xsize=300, ysize=300), Solid("#fff", xsize=50, ysize=50), x=400, y=250, can_talk=False, can_cast=True, label="scarlet_gate")
 default herb_belladonna = WorldObject(name = "Belladonna", description = "Toxic perennial.", img = Solid("#005500", xsize=300, ysize=300), sprite = Solid("#00ff00", xsize=40, ysize=40), x=700, y=450, can_take=True)
-default crossroads_sign = WorldObject(
-    name = "Automaton Guide",
-    description = "A Turkey automaton. It seems to be broken and non-responsive.",
-    img = Solid("#422", xsize=300, ysize=300),
-    sprite = Solid("#543", xsize=40, ysize=60),
-    x=480, y=300,
-    can_talk=True,
-    can_cast=True,
-    label="talk_turkey"
-)
 default arcade_machine_fixed = False
 default arcade_machine = WorldObject(
     name="ARCADE_MACHINE",
@@ -267,7 +269,7 @@ default blushwood_1 = Room("GATE", Solid("#1a1a1a"), north="blushwood_2",
 
 default blushwood_2 = Room("PLAZA", Solid("#2a2a2a"), south="blushwood_1", 
     north="manor_exterior", west="carousel", east="cider_mill", 
-    contents=[crossroads_sign, herb_mandrake])
+    contents=[herb_mandrake])
 
 default manor_exterior = Room("MANOR_GATE", Solid("#050505"), south="blushwood_2", 
     contents=[manor_door])
