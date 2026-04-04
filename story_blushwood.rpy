@@ -7,7 +7,7 @@ default dove_asked_blight = False
 default dove_asked_soda = False
 default dove_asked_organic = False
 default dove_asked_chorus = False
-default dove_starlight = False
+default dove_her = False
 default dove_asked_kingsnake = False
 default dove_asked_11 = False
 default dove_moved_to_sanctum = False
@@ -113,29 +113,12 @@ label talk_dove_blushwood:
     $ quick_menu = False
     $ can_travel = False
 
-    if dove_soda_received and not dove_soda_thanked:
-        d "You bought this for me?? Oh, you didn't have to do that, OHMYGOSH, orange soda!!! You're the sweetest!! (;w;)!!!"
-        d "..."
-        d "I feel Her energy radiating all around us, everywhere, we are all starlight in motion."
-        $ dove_soda_thanked = True
-    else:
-        d "Good evening, sister. Walk gently, there is a terrible Blight beyond these gates."
-        $ dove_starlight = True
+
+    d "Good evening, sister. Walk gently, there is a terrible Blight beyond these gates."
+
 
     label .dove_menu:
     menu:
-        "Why do you like orange soda so much?" if dove_soda_received and not dove_asked_soda:
-            d "Oranges carry the Sun's blessing, every single one of them (^_^)☀︎"
-            d "You can taste it if you pay attention, that loving warmth… and it bubbles, just like the surface of the sun!!"
-            $ dove_asked_soda = True
-            jump .dove_menu
-
-        "Soda is just flavored syrup, though. That doesn't have any actual orange juice, does it?" if dove_asked_soda and not dove_asked_organic:
-            d "Oh, most soda is just sugar and chemicals, you're right about that."
-            d "But orange soda is actually protected by the Church here- has to be organic by law (^_^)☀︎"
-            d "Which means every sip is exactly as the Sun intended."
-            $ dove_asked_organic = True
-            jump .dove_menu
 
         "Who are you?" if not dove_asked_who:
             d "I am a ☀︎Life Cleric☀︎"
@@ -152,8 +135,8 @@ label talk_dove_blushwood:
             $ dove_asked_doing = True
             jump .dove_menu
 
-        "What is the Dawn Chorus?" if dove_asked_doing and not dove_asked_chorus:
-            d "You're unfamiliar with the Dawn Chorus☀︎? It's an old tradition. Primal, some would say. Probably not something practiced much among Owls."
+        "What is the Dawn Chorus?" if dove_asked_doing and not :
+            d "You're unfamiliar with the Dawn Chorus☀︎? It's an old Hellionic tradition."
             d "But I can't imagine starting the day without singing to the Sun."
             d "It isn't really my song, though. I just… lend it my voice."
             d "It's the sound the air makes when the light comes back, when God returns, and the world remembers She exists."
@@ -162,7 +145,7 @@ label talk_dove_blushwood:
             d "..."
             d "Between the two of us… I think my practice of the Chorus☀︎ is why the Blight hasn't found its way to me yet."
             d "When you name who you are in the world out loud, you give the Void has less room to argue."
-            $ dove_asked_chorus = True
+            $  = True
             jump .dove_menu
 
         "Did you know there's a ghost next to the gate?" if dove_talked_scarlet:
@@ -206,13 +189,14 @@ label talk_dove_blushwood:
             $ dove_asked_11 = True
             jump .dove_menu
 
-        "Who do you mean, 'Her'?" if dove_starlight:
+        "Who do you mean, 'Her'?" if dove_asked_chorus and not dove_asked_her:
             d "Oh! Forgive me, two weeks alone out here and I forgot not everyone lives in my head."
             d "Though you're a Cleric, too, so perhaps you'll understand."
             d "Most of the Church speaks of the Sun as He. And yes, scripture says the same."
             d "But in my own faith, in the private, quiet part of it that belongs only to me…"
             d "The Sun is a woman. She has always been a woman."
             d "It just feels true. The way some things feel true before you have the words for them."
+            $ dove_asked_her = True
             jump .dove_menu
 
         "Here's what I've discovered about the Cabin…" if cabin_unlocked:
