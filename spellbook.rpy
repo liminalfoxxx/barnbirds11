@@ -2,19 +2,49 @@
 
 # These are "templates" that you can award to the player later with:
 #   $ inventory.learn_spell(<spell_var>)
-# The player currently starts with Ghost_Speak.exe and Speak with Animals from script.rpy.
-default ghost_speak_prog = Spell("Ghost_Speak", {"Belladonna": 1, "Candle": 1, "Cassette": 1}, frequency="death", resonance_cost=1)
-default animal_speak_prog = Spell("Animal_Speak", {"Catnip": 1, "Bone": 1, "Candle": 1}, frequency="primal", resonance_cost=1)
+default ghost_speak_prog = Spell("Ghost_Speak", {"Cassette": 1, "Belladonna": 1, "Mugwort": 1}, "Opens communication with the departed.", frequency="death", resonance_cost=1)
+default animal_speak_prog = Spell("Animal_Speak", {"Honeycomb": 1, "Catnip": 1, "Bone": 1}, "ANIMAL_TRANSLATOR.EXE: Decodes fauna frequencies.", frequency="primal", resonance_cost=1)
+default heal_blight_prog = Spell("Heal_Blight", {"Snowdrop": 1, "Lemon Balm": 1, "Candle": 1}, "Cleanses a living system of the Blight.", frequency="seelie", resonance_cost=1)
+default hack_prog = Spell("Hack", {"Circuit Board": 1, "Copper Wire": 1, "Quartz": 1}, "Interfaces with devices and automation systems.", frequency="storm", resonance_cost=1)
+default prune_prog = Spell("Prune", {"Foxglove": 1, "Sassafras": 1, "Corrupted Tape": 1}, "Structural edit. Removes dead growth from the Lattice.", frequency="unseelie", resonance_cost=1)
+default satellite_prog = Spell("Satellite", {"Apple": 1, "Gold Foil": 1, "Sunflower": 1}, "Solar-powered bioscan. Reads a subject's frequency signature.", frequency="life", resonance_cost=1)
+default money_manifest_prog = Spell("Money_Manifest", {"Bird of Paradise": 1, "Blood": 1, "Gold Coin": 1}, "Blood magic extraction. Manifests currency from life force.", frequency="blood", resonance_cost=1)
 
-# HEAL_BLIGHT – heals infected living targets (Seagull, Secretary, Ptarmigan)
-default heal_blight_prog = Spell("Heal_Blight", {"Placeholder_A": 1, "Placeholder_B": 1, "Placeholder_C": 1}, "Cleanses a living system of the Blight. Can only be cast on the infected.", frequency="seelie", resonance_cost=1)
 
-# HACK – previously Power_Surge, opens special device dialogues
-# Requires the item names exactly as in your item_db: "Orange Soda" and "Cassette".
-default hack_prog = Spell("Hack", {"Orange Soda": 1, "Cassette": 1}, "Interfaces with devices and automation systems to unlock dialogues.", frequency="storm", resonance_cost=1)
-
+default satellite_scanned = set()
 
 init python:
+    import random
+
+    npc_satellite_data = {
+        "DOVE": {"freq": "LIFE/SOLAR", "signal": "COMPOSITE — SEELIE UNDERTONE", "status": "SUSTAINED_CASTING_FATIGUE", "flagged": "SECONDARY FREQ SEELIE — LATENT — SUBJECT UNAWARE"},
+        "SCARLET_TANAGER": {"freq": "DEATH (RESIDUAL)", "signal": "SPECTRAL — STABLE", "status": "POST-MORTEM", "flagged": None},
+        "SEAGULL": {"freq": "PRIMAL (DESTABILIZED)", "signal": "DEGRADED", "status": "BLIGHT_STAGE_3 — CRITICAL", "flagged": "DOMINANT RESONANCE: GUILT — SELF-INFLICTED EXPOSURE"},
+        "TOUCAN": {"freq": "PRIMAL", "signal": "CLEAR — INTERMITTENT LATTICE DISCONNECT", "status": "NOMINAL — UNINFECTED", "flagged": None},
+        "HUMMINGBIRD": {"freq": "SEELIE", "signal": "EXTERNAL — CONTINUOUS UPLINK", "status": "CALM", "flagged": "LINK SOURCE: AVM_SECTOR — SHE IS NOT ALONE IN THERE"},
+        "CROW": {"freq": "ERR_UNCLASSIFIED", "signal": "ERR_UNCLASSIFIED", "status": "ERR_UNCLASSIFIED", "flagged": "SUBJECT IS NOT A NETWORK ENTITY — SCAN INAPPLICABLE"},
+        "SECRETARY": {"freq": "STORM (FRAGMENTED)", "signal": "DEGRADED — RECURSIVE", "status": "BLIGHT_STAGE_2", "flagged": "NEURAL PATTERN: INVESTIGATIVE — LOOP RESEMBLES DATA SEARCH"},
+        "PTARMIGAN": {"freq": "UNREADABLE", "signal": "NULL", "status": "BLIGHT_STAGE_4 — TERMINAL", "flagged": "ORIGINAL SIGNAL DEGRADED BEYOND RECOVERY — RESONANCE SHELL ONLY"},
+        "FALCON": {"freq": "DEATH (RESIDUAL)", "signal": "SPECTRAL — STABLE", "status": "POST-MORTEM", "flagged": "IMPLANT DETECTED: NEURAL DECOUPLER — GOV ISSUE"},
+        "SHRIKE": {"freq": "UNSEELIE", "signal": "LATTICE-INTEGRATED", "status": "SPECTRAL — LATTICE-ANCHORED", "flagged": "SIGNAL CO-EXTENSIVE WITH LATTICE CORE — SUBJECT AND STRUCTURE ARE ONE"},
+        "SWAN": {"freq": "BLOOD (CLOSED CIRCUIT)", "signal": "ENCRYPTED", "status": "STABLE — SELF-SUSTAINING", "flagged": "SECONDARY SIGNAL — ORIGIN: [CLASSIFIED] — GOV_IMPLANT?"},
+        "RAVEN": {"freq": "STORM/VOID (UNSTABLE)", "signal": "COMPOSITE — VOID FRAGMENT DETECTED", "status": "FUNCTIONAL — SUPPRESSING", "flagged": "VOID SIGNATURE EMBEDDED — NOT NATIVE — ORIGIN: UNKNOWN"},
+        "MAGPIE": {"freq": "PRIMAL", "signal": "CLEAR", "status": "NOMINAL", "flagged": None},
+        "GOOSE": {"freq": "STORM (MINOR)", "signal": "DEGRADED — GRIEF INTERFERENCE", "status": "FUNCTIONAL — CHRONIC STRESS", "flagged": "RESIDUAL FREQ IMPRINT IN ENVIRONMENT — PARTNER SIGNATURE — DECAYING"},
+        "OSTRICH": {"freq": "PRIMAL", "signal": "CLEAR", "status": "NOMINAL", "flagged": None},
+        "PHEASANT": {"freq": "PRIMAL", "signal": "CLEAR — FATIGUED", "status": "NOMINAL — STRESSED", "flagged": "DEPENDENT ENTITIES DETECTED: 2 (OFFSITE) — STRESS SIGNATURE: PARENTAL"},
+        "HERON": {"freq": "STORM", "signal": "DEGRADED — SLEEP DEPRIVED", "status": "FUNCTIONAL — OBSESSIVE", "flagged": "CROSS-REFERENCING 47 OPEN CASE FILES SIMULTANEOUSLY"},
+        "HEN": {"freq": "LIFE/SOLAR (MINOR)", "signal": "CLEAR", "status": "NOMINAL", "flagged": "GRIEF SIGNATURE: LAYERED — COMPENSATORY PATTERN: EXTERNAL POSITIVITY"},
+        "CASSOWARY": {"freq": "DEATH (RESIDUAL)", "signal": "SPECTRAL — STABLE", "status": "POST-MORTEM", "flagged": None},
+        "VULTURE": {"freq": "DEATH (MINOR)", "signal": "CLEAR", "status": "NOMINAL", "flagged": None},
+        "FLYING_FOX": {"freq": "PRIMAL", "signal": "CLEAR", "status": "NOMINAL", "flagged": None},
+        "SPIDER": {"freq": "PRIMAL", "signal": "CLEAR", "status": "NOMINAL", "flagged": None},
+        "VAMPIRE_BAT": {"freq": "BLOOD (MINOR)", "signal": "CLEAR", "status": "NOMINAL", "flagged": None},
+        "PIGEON": {"freq": "VOID", "signal": "ENCRYPTED — DEEP", "status": "UNKNOWN", "flagged": "SIGNAL STRUCTURE: NON-STANDARD — WHAT IS THIS"},
+        "STRAWBERRY_COW": {"freq": "SEELIE (CONSTRUCT)", "signal": "ARTIFICIAL — LATTICE-GENERATED", "status": "STRUCTURAL_INTEGRITY: DECLINING", "flagged": "BIOSCAN PARADOX — NOT ALIVE — SIGNAL IS GENUINE — ERR"},
+        "ROYAL_UNICORN": {"freq": "SEELIE (AUTONOMOUS)", "signal": "CLEAR — STRONG", "status": "UNAFFECTED", "flagged": "NOT LATTICE-DEPENDENT — SPONTANEOUS FAE MANIFESTATION — ORIGIN: UNKNOWN"},
+    }
+
     def execute_cast_sequence(program, target, inv):
         """
         Central router for resolving a spell cast on the current_target.
@@ -23,12 +53,15 @@ init python:
         target:  a WorldObject currently selected (current_target)
         inv:     the player's Inventory
         """
-        if not target or not program:
+        if not program:
             return
 
         # 1) Normalize names for matching
         program_id = program.name.upper().replace(" ", "_").replace(".EXE", "")
-        target_id = target.name.upper().replace(" ", "_")
+        # Allow self-cast spells without a target
+        if not target and program_id not in ["MONEY_MANIFEST"]:
+            return
+        target_id = target.name.upper().replace(" ", "_") if target else "SELF"
 
         # Debug helper in Shift+O
         print(f"CLEAN_ID: Program({program_id}) Target({target_id})")
@@ -37,10 +70,8 @@ init python:
 
         # --- GHOST SPEAK LOGIC ---
         if program_id == "GHOST_SPEAK":
-            # Valid spectral targets
-            valid_targets = {"SCARLET_TANAGER", "FALCON", "SHRIKE", "LOST_SOUL", "CASSOWARY", "ROOSTER", "GHOST_CAT"}
+            valid_targets = {"SCARLET_TANAGER", "FALCON", "SHRIKE", "SNOWY_OWL", "CASSOWARY", "ROOSTER", "GHOST_CAT"}
             if target_id in valid_targets:
-                # If the ghost hasn't been "decrypted" to can_talk, pay the recipe and enable
                 if not target.can_talk:
                     if inv.execute_program(program):
                         target.can_talk = True
@@ -59,7 +90,7 @@ init python:
 
         # --- ANIMAL SPEAK LOGIC ---
         elif program_id in {"ANIMAL_SPEAK", "SPEAK_WITH_ANIMALS"}:
-            valid_targets = {"PATCH_CAT", "STRAY_DOG", "CROW", "SPIDER"}
+            valid_targets = {"PATCH_CAT", "STRAY_DOG", "CROW", "SPIDER", "STRAWBERRY_COW", "ROYAL_UNICORN"}
             if target_id in valid_targets:
                 if not store.can_speak_with_animals:
                     if inv.execute_program(program):
@@ -78,7 +109,6 @@ init python:
 
         # --- HEAL_BLIGHT LOGIC ---
         elif program_id == "HEAL_BLIGHT":
-            # One-time cures with simple flags
             if target_id == "SEAGULL" and not getattr(store, "seagull_healed", False):
                 if inv.execute_program(program):
                     setattr(store, "seagull_healed", True)
@@ -109,26 +139,17 @@ init python:
 
         # --- HACK LOGIC ---
         elif program_id == "HACK":
-            valid_targets = {"AUTOMATON_GUIDE", "PC_TERMINAL", "ARCADE_MACHINE"}
+            valid_targets = {"PC_TERMINAL", "ARCADE_MACHINE", "VENDING_MACHINE", "VENDING_MILL", "VENDING_SQUARE", "VENDING_PARLOR", "SLOT_MACHINE", "GACHA_MACHINE"}
             if target_id in valid_targets:
-                # Automaton Guide one-shot activation
-                if target_id == "AUTOMATON_GUIDE" and not getattr(store, "turkey_activated", False):
-                    if inv.execute_program(program):
-                        setattr(store, "turkey_activated", True)
-                        renpy.jump("surge_turkey")
-                    else:
-                        renpy.notify("ERROR: INSUFFICIENT_COMPONENTS")
-                        renpy.jump("overworld_loop")
-                
                 # PC Terminal dialog
-                elif target_id == "PC_TERMINAL":
+                if target_id == "PC_TERMINAL":
                     if inv.execute_program(program):
                         renpy.jump("hack_terminal")
                     else:
                         renpy.notify("ERROR: INSUFFICIENT_COMPONENTS")
                         renpy.jump("overworld_loop")
-                
-                # NEW: Arcade Machine fix
+
+                # Arcade Machine fix
                 elif target_id == "ARCADE_MACHINE" and not getattr(store, "arcade_machine_fixed", False):
                     if inv.execute_program(program):
                         setattr(store, "arcade_machine_fixed", True)
@@ -139,12 +160,54 @@ init python:
                     else:
                         renpy.notify("ERROR: INSUFFICIENT_COMPONENTS")
                         renpy.jump("overworld_loop")
-                
+
                 else:
                     renpy.notify("Nothing to hack here! Or this device is already functioning.")
                     renpy.jump("overworld_loop")
             else:
                 renpy.notify("INCOMPATIBLE_SUBJECT_TYPE")
+                renpy.jump("overworld_loop")
+
+        # --- PRUNE LOGIC ---
+        elif program_id == "PRUNE":
+            if target_id == "MAGICAL_ROOTS" and not getattr(store, "cabin_roots_deleted", False):
+                if inv.execute_program(program):
+                    setattr(store, "cabin_roots_deleted", True)
+                    target.can_cast = False
+                    target.description = "The roots have been pruned away. The path is clear."
+                    renpy.notify("PRUNE_SUCCESSFUL: LATTICE_STRUCTURE_EDITED")
+                    renpy.jump("after_delete_roots")
+                else:
+                    renpy.notify("ERROR: INSUFFICIENT_COMPONENTS")
+                    renpy.jump("overworld_loop")
+            else:
+                renpy.notify("INCOMPATIBLE_SUBJECT_TYPE")
+                renpy.jump("overworld_loop")
+
+        # --- SATELLITE LOGIC ---
+        elif program_id == "SATELLITE":
+            target_name = target.name.upper().replace(" ", "_")
+            if target_name in npc_satellite_data:
+                if inv.execute_program(program):
+                    store.satellite_scanned.add(target_name)
+                    renpy.notify("SATELLITE_SCAN_COMPLETE: " + target.name)
+                    renpy.jump("overworld_loop")
+                else:
+                    renpy.notify("ERROR: INSUFFICIENT_COMPONENTS")
+                    renpy.jump("overworld_loop")
+            else:
+                renpy.notify("ERR: SUBJECT NOT CATALOGUED FOR BIOSCAN")
+                renpy.jump("overworld_loop")
+
+        # --- MONEY_MANIFEST LOGIC (self-cast) ---
+        elif program_id == "MONEY_MANIFEST":
+            if inv.execute_program(program):
+                payout = random.choice([5, 8, 10, 12, 15, 20, 25])
+                inv.earn(payout)
+                renpy.notify("BLOOD_MANIFEST_COMPLETE: +" + str(payout) + " UNITS")
+                renpy.jump("overworld_loop")
+            else:
+                renpy.notify("ERROR: INSUFFICIENT_COMPONENTS")
                 renpy.jump("overworld_loop")
 
         # System Reboot / default
@@ -309,18 +372,29 @@ screen spellbook_screen():
 
                                 # Only allow execute if the player has all required items
                                 if selected_program.can_cast(inventory):
-                                    textbutton "[[ EXECUTE_PROGRAM ]]":
-                                        action If(
-                                            current_target,
-                                            [ Hide("spellbook_screen"),
-                                              Function(execute_cast_sequence, selected_program, current_target, inventory) ],
-                                            None
-                                        )
-                                        text_size 40
-                                        text_insensitive_color "#222"
-                                        text_idle_color "#0f0"
-                                        text_hover_color "#fff"
-                                        xalign 0.5
+                                    $ is_self_cast = selected_program.name.upper().replace(" ", "_").replace(".EXE", "") in ["MONEY_MANIFEST"]
+                                    if is_self_cast:
+                                        textbutton "[[ EXECUTE_PROGRAM ]]":
+                                            action [
+                                                Hide("spellbook_screen"),
+                                                Function(execute_cast_sequence, selected_program, current_target, inventory)
+                                            ]
+                                            text_size 40
+                                            text_idle_color "#0f0"
+                                            text_hover_color "#fff"
+                                            xalign 0.5
+                                    elif current_target:
+                                        textbutton "[[ EXECUTE_PROGRAM ]]":
+                                            action [
+                                                Hide("spellbook_screen"),
+                                                Function(execute_cast_sequence, selected_program, current_target, inventory)
+                                            ]
+                                            text_size 40
+                                            text_idle_color "#0f0"
+                                            text_hover_color "#fff"
+                                            xalign 0.5
+                                    else:
+                                        text "[[ SELECT_TARGET_FIRST ]]" color "#444" size 40 xalign 0.5
                                 else:
                                     text "[[ INSUFFICIENT_RESOURCES ]]" color "#ff8000" size 40 xalign 0.5
                         else:
