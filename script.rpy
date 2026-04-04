@@ -32,13 +32,17 @@ default cabin_roots_deleted = False
 default ghost_speak = Spell(
     name="Ghost_Speak.exe",
     recipe= {"Belladonna": 1, "Candle": 1, "Cassette": 1},
-    description = "Opens communication with the departed."
+    description = "Opens communication with the departed.",
+    frequency="death",
+    resonance_cost=1
 )
 
 default animal_speak = Spell(
     name="Speak with Animals",
     recipe= {"Catnip": 1, "Bone": 1, "Candle": 1},
-    description = "ANIMAL_TRANSLATOR.EXE: Decodes feline/canine frequencies."
+    description = "ANIMAL_TRANSLATOR.EXE: Decodes feline/canine frequencies.",
+    frequency="primal",
+    resonance_cost=1
 )
 
 # IMAGES
@@ -138,6 +142,10 @@ label start_debug:
         for item_key in item_db:
             inventory.add_item(item_db[item_key])
             inventory.add_item(item_db[item_key])  # Add twice for testing
+        
+        # Give debug resonance
+        for freq in inventory.resonance:
+            inventory.resonance[freq] = 99
     
     $ journal_entries = []
     $ journal_entries.append(JournalEntry("DEBUG", "Debug Mode Active", "2026-01-15", "All systems unlocked. Full access granted."))

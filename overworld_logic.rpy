@@ -128,7 +128,6 @@ define item_db = {
     "pumpkin_pie": Item("Pumpkin Pie", cost=5, description="A warm dessert with the scent of Hallow's Eve", use_func=use_pumpkin_pie),
     "jack_o_lantern": Item("Jack o Lantern", cost=0, description="A carved pumpkin emitting a warm glow."),
     "poison": Item("Poison", cost=0, description="This will kill you.", use_func=use_poison),
-    "Destruction_Scroll": Item("Destruction_Scroll", cost=0, description="A forbidden spell scroll capable of deleting world geometry."),
     "placeholder_a": Item("Placeholder_A", cost=0, description="A placeholder spell component. TBD."),
     "placeholder_b": Item("Placeholder_B", cost=0, description="A placeholder spell component. TBD."),
     "placeholder_c": Item("Placeholder_C", cost=0, description="A placeholder spell component. TBD."),

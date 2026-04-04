@@ -10,14 +10,19 @@ init -10 python:
             self.use_func = use_func # Stores the transformation logic
 
     class Spell: 
-        def __init__(self, name, recipe, description=""):
+        def __init__(self, name, recipe, description="", frequency=None, resonance_cost=0):
             self.name = name
             self.recipe = recipe 
             self.description = description
+            self.frequency = frequency
+            self.resonance_cost = resonance_cost
 
         def can_cast(self, inventory):
             for item_name, req_amount in self.recipe.items():
                 if inventory.count(item_name) < req_amount:
+                    return False
+            if self.frequency and self.resonance_cost > 0:
+                if not inventory.has_resonance(self.frequency, self.resonance_cost):
                     return False
             return True
 
@@ -26,7 +31,30 @@ init -10 python:
             self.money = money
             self.items = []
             self.known_spells = []
+            self.resonance = {
+                "primal": 0,
+                "seelie": 0,
+                "unseelie": 0,
+                "storm": 0,
+                "life": 0,
+                "blood": 0,
+                "death": 13,
+                "void": 0,
+            }
             
+        def add_resonance(self, freq, amount=1):
+            if freq in self.resonance:
+                self.resonance[freq] += amount
+
+        def has_resonance(self, freq, amount=1):
+            return self.resonance.get(freq, 0) >= amount
+
+        def spend_resonance(self, freq, amount=1):
+            if self.has_resonance(freq, amount):
+                self.resonance[freq] -= amount
+                return True
+            return False
+
         def buy(self, item):
             if self.money >= item.cost:
                 self.money -= item.cost
@@ -78,6 +106,8 @@ init -10 python:
                 for item_name, req_amount in spell.recipe.items():
                     for _ in range(req_amount):
                         self.remove_by_name(item_name)
+                if spell.frequency and spell.resonance_cost > 0:
+                    self.spend_resonance(spell.frequency, spell.resonance_cost)
                 return True 
             return False
 
