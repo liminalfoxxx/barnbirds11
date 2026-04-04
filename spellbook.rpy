@@ -3,18 +3,15 @@
 # These are "templates" that you can award to the player later with:
 #   $ inventory.learn_spell(<spell_var>)
 # The player currently starts with Ghost_Speak.exe and Speak with Animals from script.rpy.
-default ghost_speak_prog = Spell("Ghost_Speak", {"Belladonna": 1, "Candle": 1, "Cassette": 1})
-default animal_speak_prog = Spell("Animal_Speak", {"Catnip": 1, "Bone": 1, "Candle": 1})
-
-# DELETE (Destruction) – uses the Destruction Scroll
-default delete_prog = Spell("Delete", {"Destruction_Scroll": 1}, "Deletes obstacles in your way. 'WARNING: HIGHLY UNSTABLE CODE.'")
+default ghost_speak_prog = Spell("Ghost_Speak", {"Belladonna": 1, "Candle": 1, "Cassette": 1}, frequency="death", resonance_cost=1)
+default animal_speak_prog = Spell("Animal_Speak", {"Catnip": 1, "Bone": 1, "Candle": 1}, frequency="primal", resonance_cost=1)
 
 # HEAL_BLIGHT – heals infected living targets (Seagull, Secretary, Ptarmigan)
-default heal_blight_prog = Spell("Heal_Blight", {"Placeholder_A": 1, "Placeholder_B": 1, "Placeholder_C": 1}, "Cleanses a living system of the Blight. Can only be cast on the infected.")
+default heal_blight_prog = Spell("Heal_Blight", {"Placeholder_A": 1, "Placeholder_B": 1, "Placeholder_C": 1}, "Cleanses a living system of the Blight. Can only be cast on the infected.", frequency="seelie", resonance_cost=1)
 
 # HACK – previously Power_Surge, opens special device dialogues
 # Requires the item names exactly as in your item_db: "Orange Soda" and "Cassette".
-default hack_prog = Spell("Hack", {"Orange Soda": 1, "Cassette": 1}, "Interfaces with devices and automation systems to unlock dialogues.")
+default hack_prog = Spell("Hack", {"Orange Soda": 1, "Cassette": 1}, "Interfaces with devices and automation systems to unlock dialogues.", frequency="storm", resonance_cost=1)
 
 
 init python:
@@ -77,21 +74,6 @@ init python:
                     renpy.jump(target.label)
             else:
                 renpy.notify("INCOMPATIBLE_SUBJECT_TYPE")
-                renpy.jump("overworld_loop")
-
-        # --- DELETE / DESTRUCTION LOGIC ---
-        elif program_id == "DELETE":
-            # Currently only used for the MAGICAL_ROOTS
-            if target_id == "MAGICAL_ROOTS":
-                if inv.execute_program(program):
-                    renpy.notify("PROGRAM DELETE SUCCESSFUL. Roots eradicated.")
-                    store.cabin_roots_deleted = True
-                    renpy.jump("after_delete_roots")
-                else:
-                    renpy.notify("ERROR: INSUFFICIENT_COMPONENTS")
-                    renpy.jump("overworld_loop")
-            else:
-                renpy.notify("ERROR: THIS PROGRAM'S CODE WILL NOT WORK HERE.")
                 renpy.jump("overworld_loop")
 
         # --- HEAL_BLIGHT LOGIC ---
@@ -193,21 +175,21 @@ screen spellbook_screen():
         hbox:
             spacing 40
 
-            # --- LEFT COLUMN: Known Programs ---
+            # --- LEFT COLUMN: Known Programs + Resonance Panel ---
             vbox:
                 xsize 450
+                spacing 10
                 frame:
                     background Solid("#e15a00")
                     padding (2, 2)
-                    yfill True
                     frame:
                         background Solid("#0d0d0d")
                         padding (10, 10)
                         xfill True
-                        yfill True
                         viewport:
                             scrollbars "vertical"
                             mousewheel True
+                            ysize 300
                             vbox:
                                 spacing 5
                                 if not inventory.known_spells:
@@ -224,6 +206,43 @@ screen spellbook_screen():
                                                 yalign 0.5
                                                 color ("#0d0d0d" if selected_program == s else "#e15a00")
                                                 size 26
+
+                frame:
+                    background Solid("#e15a00")
+                    padding (2, 2)
+                    xfill True
+                    frame:
+                        background Solid("#0d0d0d")
+                        padding (14, 14)
+                        xfill True
+                        vbox:
+                            spacing 6
+                            text "FREQ_SCAN.EXE" color "#e15a00" size 22
+                            text "─────────────────" color "#e15a00" size 18
+                            hbox:
+                                text "PRIMAL .... " color "#e15a00" size 20
+                                text "%02d" % inventory.resonance.get("primal", 0) color "#0f0" size 20
+                            hbox:
+                                text "SEELIE .... " color "#e15a00" size 20
+                                text "%02d" % inventory.resonance.get("seelie", 0) color "#0f0" size 20
+                            hbox:
+                                text "UNSEELIE .. " color "#e15a00" size 20
+                                text "%02d" % inventory.resonance.get("unseelie", 0) color "#0f0" size 20
+                            hbox:
+                                text "STORM ..... " color "#e15a00" size 20
+                                text "%02d" % inventory.resonance.get("storm", 0) color "#0f0" size 20
+                            hbox:
+                                text "LIFE ...... " color "#e15a00" size 20
+                                text "%02d" % inventory.resonance.get("life", 0) color "#0f0" size 20
+                            hbox:
+                                text "BLOOD ..... " color "#e15a00" size 20
+                                text "%02d" % inventory.resonance.get("blood", 0) color "#0f0" size 20
+                            hbox:
+                                text "DEATH ..... " color "#e15a00" size 20
+                                text "%02d" % inventory.resonance.get("death", 0) color "#0f0" size 20
+                            hbox:
+                                text "VOID ...... " color "#e15a00" size 20
+                                text "ERR_NULL_FREQ" color "#ff3300" size 20
 
             # --- RIGHT COLUMN: Analysis & Execution ---
             vbox:
@@ -278,6 +297,13 @@ screen spellbook_screen():
                                                 add Solid("#222", xsize=80, ysize=80)
                                                 text "[ingredient]" color "#ff8000" size 18 xalign 0.5
                                             text "[inventory.count(ingredient)] / [amount]" size 20 xalign 0.5
+
+                                if selected_program.frequency and selected_program.resonance_cost > 0:
+                                    null height 10
+                                    if inventory.has_resonance(selected_program.frequency, selected_program.resonance_cost):
+                                        text "FREQUENCY_REQUIRED: [selected_program.frequency.upper()] ([selected_program.resonance_cost])" color "#0f0" size 22
+                                    else:
+                                        text "FREQUENCY_REQUIRED: [selected_program.frequency.upper()] ([selected_program.resonance_cost])" color "#ff8000" size 22
 
                                 null height 40
 
