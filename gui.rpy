@@ -103,6 +103,10 @@ define gui.textbox_height = 278
 ## is center, and 1.0 is the bottom.
 define gui.textbox_yalign = 1.0
 
+## The default speed of text display, in characters per second. 0 for instant.
+## Players can adjust this with the DATA_TRANSFER_RATE slider in the System screen.
+define config.default_text_cps = 40
+
 
 ## The placement of the speaking character's name, relative to the textbox.
 ## These can be a whole number of pixels from the left or top, or 0.5 to center.
